@@ -1,6 +1,16 @@
+import time
+from threading import Thread
+from typing import Callable
+
+from argument_parser import receive_arguments
+from authentication import GAuth
+
+
 def start():
     while True:
-        pass
+        t = Thread(target=update, args=(add_view,))
+        t.start()
+        time.sleep(10)
 
 
 def add_book(doc_id: str):
@@ -18,16 +28,29 @@ def add_view(document: dict):
     print(document)
 
 
-def update():
+@GAuth.require("analytics", "v3")
+@receive_arguments
+def update(view_callback: Callable, analytics, view_id):
     """
     1. Retrieve analytics
     2. Call add_view on each view
 
     :return:
     """
-    pass
+    result = analytics.data().realtime().get(
+        ids=f"ga:{view_id}",
+        metrics='rt:pageviews',
+        dimensions='rt:pagePath,rt:minutesAgo,rt:country,rt:city,rt:pageTitle',
+        filters=r"rt:pagePath=~/primo-explore/.*docid.*",
+        sort="rt:minutesAgo"
+    ).execute()
+
+    rows = result["rows"]
+    for row in rows:
+        view_callback(row)
 
 
+"""
 {
     "views": [
         {
@@ -46,3 +69,4 @@ def update():
         }
     ]
 }
+"""

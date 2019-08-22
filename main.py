@@ -1,5 +1,6 @@
 import sys
 
+import worker
 from argument_parser import receive_arguments
 from authentication import GAuth
 
@@ -10,7 +11,7 @@ def main(view_id):
     if view_id is None:
         view_selection_help()
     else:
-        pass
+        worker.start()
 
 
 def display_welcome():
