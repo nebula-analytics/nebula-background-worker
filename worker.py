@@ -1,9 +1,12 @@
+import os
 import time
 from threading import Thread
 from typing import Callable
 
 from argument_parser import receive_arguments
 from authentication import GAuth
+
+import requests
 
 
 def start():
@@ -13,8 +16,22 @@ def start():
         time.sleep(10)
 
 
-def add_book(doc_id: str):
-    pass
+def get_book(doc_id: str, context: str):
+    api_key = os.getenv("PRIMO_API_KEY")
+    primo_pnx_gateway = os.getenv("PRIMO_PNX_GATEWAY")
+
+    url = f"{primo_pnx_gateway}/{context}/{doc_id}"
+
+    querystring = {"apiKey": api_key}
+
+    payload = ""
+    headers = {
+        'accept': "application/json"
+    }
+
+    response = requests.get(url, data=payload, headers=headers, params=querystring)
+
+    return response.json()
 
 
 def add_view(document: dict):
