@@ -8,23 +8,24 @@ excluded_fields = ["_id"]
 """ Map core fields to other names """
 mapped_fields = {"pnx_id": "_id"}
 
+core_fields = list(mapped_fields.get(key, key) for key in core_fields)
+
 
 def convert_field_names(name: str):
     name = name.replace("@", "_")
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    fixed = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    fixed = re.sub('([a-z0-9])([A-Z])', r'\1_\2', fixed).lower()
+    mapped = mapped_fields.get(fixed, fixed)
+    return mapped
 
 
 def transform(input_data: dict) -> dict:
     output_data = {}
     for key, value in input_data.items():
-        new_field_name = convert_field_names(key)
-        if new_field_name in mapped_fields:
-            new_field_name = mapped_fields[new_field_name]
-        output_data[new_field_name] = value
+        output_data[convert_field_names(key)] = value
 
     core_data = {
-        key: output_data[mapped_fields.get(key, key)] for key in core_fields
+        key: output_data[key] for key in core_fields
     }
 
     extra_data = {

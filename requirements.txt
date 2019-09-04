@@ -1,3 +1,4 @@
+PyYAML
 marshmallow
 google-api-python-client==1.7.11
 google-auth==1.6.3

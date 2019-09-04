@@ -4,7 +4,7 @@ from urllib.parse import urlparse, parse_qs
 
 from pymongo.collection import Collection
 
-from Models.MongoBase import MongoBase
+from utils.MongoBase import MongoBase
 
 
 @dataclass
@@ -50,3 +50,7 @@ class PageView:
             "country": self.country,
             "time": self.when
         })
+
+    @MongoBase.with_book_collection
+    def get_book(self, books: Collection):
+        return books.find(self.doc_id)

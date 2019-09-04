@@ -1,8 +1,7 @@
 import sys
 
-import worker
-from argument_parser import receive_arguments
-from authentication import GAuth
+from Analytics import get_available_views, get_current_account
+from utils.argument_parser import receive_arguments
 
 
 @receive_arguments
@@ -11,7 +10,7 @@ def main(view_id):
     if view_id is None:
         view_selection_help()
     else:
-        worker.start()
+        pass
 
 
 def display_welcome():
@@ -46,26 +45,6 @@ def view_selection_help():
 @receive_arguments
 def build_run_command(path_to_token: str, view_id: str):
     return f"\npython '{__file__}' '{path_to_token}' --view_id '{view_id}'\n"
-
-
-@GAuth.require("analytics", "v3")
-def get_available_views(analytics):
-    accounts = analytics.management().accounts().list().execute()
-    for account in accounts["items"]:
-        account_id = account["id"]
-        properties = analytics.management().webproperties().list(accountId=account_id).execute()
-        for webp in properties["items"]:
-            web_id = webp["id"]
-            views = analytics.management().profiles().list(
-                accountId=account_id,
-                webPropertyId=web_id).execute()
-            for view in views["items"]:
-                yield view
-
-
-@GAuth.require("analytics", "v3")
-def get_current_account(analytics):
-    return analytics.management().accounts().list().execute()
 
 
 if __name__ == '__main__':

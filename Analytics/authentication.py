@@ -7,7 +7,7 @@ from typing import Callable
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 
-from argument_parser import receive_arguments
+from utils.argument_parser import receive_arguments
 
 
 class AuthenticationException(Exception):

@@ -3,3 +3,5 @@ venv
 *.json
 *.pickle
 *.pyc
+*.secret
+celerybeat-schedule

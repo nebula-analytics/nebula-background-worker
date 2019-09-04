@@ -1,0 +1,40 @@
+analytics:
+  view_id: "<Set this>"
+  path_to_credentials: "<location of oauth credentials>"
+
+primo:
+  host: "<The primo api url ending in /v1"
+  api_key: "<Key provided by Primo>"
+
+database:
+  mongodb:
+    username: ""
+    password: ""
+    host: "localhost:27017"
+    database: "nebula"
+    collections:
+      views: "views"
+      books: "books"
+
+
+celery:
+  broker_url: 'amqp://localhost'
+  result_backend: 'amqp://localhost'
+
+  task_serializer: 'json'
+  result_serializer: 'json'
+  accept_content: ['json']
+  timezone: 'Australia/Melbourne'
+
+  task_annotations: {
+    'schedule.import_record': {'rate_limit': '2/m'},
+    'schedule.insert_view': {'rate_limit': '10/s'}
+  }
+
+  beat_schedule: {
+    Synchronize (Analytics -> Database): {
+      'task': 'schedule.sync_views',
+      'schedule': 10.0,
+      'args':[]
+    }
+  }

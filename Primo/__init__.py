@@ -4,7 +4,7 @@ import requests
 from celery import Celery
 from pymongo.collection import Collection
 
-from Models.MongoBase import MongoBase
+from utils.MongoBase import MongoBase
 from Primo.transform import transform
 
 
@@ -33,4 +33,5 @@ def get_book(doc_id: str, context: str):
 
 @MongoBase.with_book_collection
 def store_record(record: dict, books: Collection):
-    books.insert_one(record)
+    insert = books.insert_one(record)
+    return insert.inserted_id
