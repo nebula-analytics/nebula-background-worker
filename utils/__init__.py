@@ -4,10 +4,12 @@ from typing import Callable
 from utils.ConfigMap import ConfigMap
 
 
-def receives_config(*required_keys):
+def receives_config(*required_keys, as_json=False):
     def receive_function(fn: Callable):
         signature = inspect.signature(fn)
         config = ConfigMap.get_singleton()
+        if as_json:
+            config = config.dict
 
         def wrapper(*args, **kwargs):
             if not required_keys:

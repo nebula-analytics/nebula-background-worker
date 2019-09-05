@@ -3,11 +3,12 @@ from typing import Tuple, Optional
 from Analytics.PageView import PageView
 from Primo import *
 from Primo.transform import transform
+from main import view_selection_help
 from utils import receives_config
 
 app = Celery()
 
-receives_config("celery")(app.config_from_object)()
+receives_config("celery", as_json=True)(app.config_from_object)()
 
 
 @app.task()
@@ -27,7 +28,7 @@ def import_record(doc_id: str, context: str) -> Tuple[Optional[str], str]:
 
 @app.task()
 def sync_views():
-    print("sync")
+    view_selection_help()
 
 
 @app.task()

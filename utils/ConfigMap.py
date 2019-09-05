@@ -72,7 +72,7 @@ class ConfigMap:
         :param item: the key to check
         :return:
         """
-        return self.get(item) is None
+        return self.get(item) is not None
 
     def __iter__(self) -> Iterable[str]:
         """
