@@ -1,20 +1,13 @@
 import inspect
-import os
 from typing import Callable
 
-import yaml
-
-
-def get_config():
-    path = os.getenv("NEBULA_CONFIG", "./config.yaml")
-    with open(path, "r") as config_f:
-        return yaml.load(config_f)
+from utils.ConfigMap import ConfigMap
 
 
 def receives_config(*required_keys):
     def receive_function(fn: Callable):
         signature = inspect.signature(fn)
-        config = get_config()
+        config = ConfigMap.get_singleton()
 
         def wrapper(*args, **kwargs):
             if not required_keys:
