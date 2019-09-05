@@ -7,6 +7,7 @@ from typing import Callable
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 
+from utils import receives_config, ConfigMap
 from utils.argument_parser import receive_arguments
 
 
@@ -64,17 +65,19 @@ class GAuth:
         return token.valid
 
     @classmethod
-    @receive_arguments
-    def _load_token_file(cls, path_to_token: str):
-        if os.path.isfile(path_to_token):
+    @receives_config("analytics")
+    def _load_token_file(cls, analytics: ConfigMap):
+        if os.path.isfile(analytics.path_to_credentials):
             try:
-                with open(path_to_token, "rb") as tokenf:
+                with open(analytics.path_to_credentials, "rb") as tokenf:
                     token = pickle.load(tokenf)
                     if not token:
-                        raise AuthenticationException(f"The provided token file '{path_to_token}' was empty")
+                        raise AuthenticationException(
+                            f"The provided token file '{analytics.path_to_credentials}' was empty")
                     return token
             except UnpicklingError:
                 raise AuthenticationException(
-                    f"The provided token file '{path_to_token}' is corrupted and could not be loaded")
+                    f"The provided token file '{analytics.path_to_credentials}' is corrupted and could not be loaded")
         else:
-            raise AuthenticationException(f"The provided token file '{path_to_token}' was not a valid file object")
+            raise AuthenticationException(
+                f"The provided token file '{analytics.path_to_credentials}' was not a valid file object")

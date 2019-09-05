@@ -3,7 +3,7 @@ from typing import Tuple, Optional
 from Analytics.PageView import PageView
 from Primo import *
 from Primo.transform import transform
-from utils.config_parser import receives_config
+from utils import receives_config
 
 app = Celery()
 

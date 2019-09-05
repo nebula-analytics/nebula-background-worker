@@ -1,19 +1,28 @@
 import sys
 
-from Analytics import get_available_views, get_current_account
-from utils.argument_parser import receive_arguments
+from Analytics.helpers import get_available_views, get_current_account
+from utils import receives_config
 
 
-@receive_arguments
-def main(view_id):
+@receives_config("analytics")
+def main(analytics):
+    """
+    TODO: Decide if main needs to be deprecated
+    :param analytics:
+    :return:
+    """
     display_welcome()
-    if view_id is None:
+    if not analytics.view_id:
         view_selection_help()
     else:
         pass
 
 
 def display_welcome():
+    """
+    Display a welcome message
+    :return:
+    """
     user = get_current_account()
     message = f"Welcome to the Nebula Background worker, {user['username']}"
     print(message)
@@ -22,6 +31,10 @@ def display_welcome():
 
 
 def view_selection_help():
+    """
+    Display a help message for configuring the view
+    :return:
+    """
     views = list(get_available_views())
     if not views:
         print("The current account is not authorized to access any analytics data", file=sys.stderr)
@@ -37,14 +50,13 @@ def view_selection_help():
 
         print(layout % (index, account_id, profile_id, view_id))
 
-    print("\nTo complete setup please provide the view_id "
-          "argument to this script (We've inserted an example id for you).")
-    print(build_run_command(view_id=views[0]["id"]))
+    # print("\nTo complete setup please provide the view_id "
+    #       "argument to this script (We've inserted an example id for you).")
+    # print(build_run_command(view_id=views[0]["id"]))
 
 
-@receive_arguments
-def build_run_command(path_to_token: str, view_id: str):
-    return f"\npython '{__file__}' '{path_to_token}' --view_id '{view_id}'\n"
+# def build_run_command(path_to_token: str, view_id: str):
+#     return f"\npython '{__file__}' '{path_to_token}' --view_id '{view_id}'\n"
 
 
 if __name__ == '__main__':

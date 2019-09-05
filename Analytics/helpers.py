@@ -1,12 +1,13 @@
+from utils import receives_config, ConfigMap
 from utils.argument_parser import receive_arguments
 from Analytics.authentication import GAuth
 
 
 @GAuth.require("analytics", "v3")
-@receive_arguments
-def generate_view_rows(analytics, view_id):
+@receives_config("analytics")
+def generate_view_rows(analytics, config: ConfigMap):
     result = analytics.data().realtime().get(
-        ids=f"ga:{view_id}",
+        ids=f"ga:{config.view_id}",
         metrics='rt:pageviews',
         dimensions='rt:pagePath,rt:minutesAgo,rt:country,rt:city,rt:pageTitle',
         filters=r"rt:pagePath=~/primo-explore/.*docid.*",
