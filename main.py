@@ -4,18 +4,13 @@ from Analytics.helpers import get_available_views, get_current_account
 from utils import receives_config
 
 
-@receives_config("analytics")
-def main(analytics):
+def main():
     """
     TODO: Decide if main needs to be deprecated
-    :param analytics:
     :return:
     """
     display_welcome()
-    if not analytics.view_id:
-        view_selection_help()
-    else:
-        pass
+    view_selection_help()
 
 
 def display_welcome():

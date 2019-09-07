@@ -4,11 +4,12 @@ import pickle
 from pickle import UnpicklingError
 from typing import Callable
 
+# noinspection PyPackageRequirements
 from google.auth.transport.requests import Request
+# noinspection PyPackageRequirements
 from googleapiclient.discovery import build
 
 from utils import receives_config, ConfigMap
-from utils.argument_parser import receive_arguments
 
 
 class AuthenticationException(Exception):

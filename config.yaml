@@ -3,8 +3,13 @@ analytics:
   path_to_credentials: "<location of oauth credentials>"
 
 primo:
-  host: "<The primo api url ending in /v1"
+  host: "<The primo api url ending in /pnxs>"
+  contexts: ["L", "PC"]
   api_key: "<Key provided by Primo>"
+  common_fields: ['title', 'identifier']
+  excluded_fields: ["_id"]
+  name_mapping: {"lang3": "language", "_type":"record_type"}
+  key_by: "pnx_id"
 
 database:
   mongodb:
@@ -27,13 +32,17 @@ celery:
   timezone: 'Australia/Melbourne'
 
   task_annotations: {
-    'schedule.import_record': {'rate_limit': '2/m'},
-    'schedule.insert_view': {'rate_limit': '10/s'}
+    'schedule.request_record': {'rate_limit': '15/m'},
   }
 
   beat_schedule: {
     Synchronize (Analytics -> Database): {
       'task': 'schedule.sync_views',
+      'schedule': 10.0,
+      'args':[]
+    },
+    Synchronize (Primo -> Database): {
+      'task': 'schedule.sync_books',
       'schedule': 10.0,
       'args':[]
     }

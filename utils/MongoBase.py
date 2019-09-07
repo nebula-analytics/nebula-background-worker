@@ -1,23 +1,24 @@
 import inspect
-import os
 
 import pymongo
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
+from utils import receives_config
+
 
 class MongoBase:
-    DATABASE = os.getenv("DATABASE_NAME", "nebula")
-    VIEW_COLLECTION = os.getenv("VIEW_COLLECTION_NAME", "views")
-    BOOK_COLLECTION = os.getenv("BOOK_COLLECTION_NAME", "books")
-    HOST = os.getenv("MONGO_HOST", "mongodb://localhost:27017/")
     __client: MongoClient = None
 
     @classmethod
-    def _get_client(cls):
-
+    @receives_config("database")
+    def _get_client(cls, config):
         if cls.__client is None:
-            cls.__client = pymongo.MongoClient(cls.HOST)
+            auth_string = ""
+            if config.mongodb.username:
+                auth_string = f"{config.mongodb.username}:{config.mongodb.password}@"
+            cls.__client = pymongo.MongoClient(
+                f"mongodb://{auth_string}{config.mongodb.host}")
 
         """ Test Connection """
         try:
@@ -28,18 +29,26 @@ class MongoBase:
         return cls.__client
 
     @classmethod
-    def _get_database(cls):
+    @receives_config("database")
+    def _get_database(cls, config):
         client = cls._get_client()
-        database = client[cls.DATABASE]
+        database = client[config.mongodb.database]
         return database
 
     @classmethod
-    def get_view_collection(cls):
-        return cls._get_database().get_collection(cls.VIEW_COLLECTION)
+    @receives_config("database")
+    def get_view_collection(cls, config):
+        return cls._get_database().get_collection(config.mongodb.collections.views)
 
     @classmethod
-    def get_book_collection(cls):
-        return cls._get_database().get_collection(cls.BOOK_COLLECTION)
+    @receives_config("database")
+    def get_book_collection(cls, config):
+        return cls._get_database().get_collection(config.mongodb.collections.books)
+
+    @classmethod
+    @receives_config("database")
+    def get_util_collection(cls, config):
+        return cls._get_database().get_collection(config.mongodb.collections.utils)
 
     @classmethod
     def _with_collection(cls, name, fn):
@@ -53,9 +62,16 @@ class MongoBase:
         return wrapper
 
     @classmethod
-    def with_view_collection(cls, fn):
-        return cls._with_collection(cls.VIEW_COLLECTION, fn)
+    @receives_config("database")
+    def with_view_collection(cls, fn, database=None):
+        return cls._with_collection(database.mongodb.collections.views, fn)
 
     @classmethod
-    def with_book_collection(cls, fn):
-        return cls._with_collection(cls.BOOK_COLLECTION, fn)
+    @receives_config("database")
+    def with_book_collection(cls, fn, database=None):
+        return cls._with_collection(database.mongodb.collections.books, fn)
+
+    @classmethod
+    @receives_config("database")
+    def with_utils_collection(cls, fn, database=None):
+        return cls._with_collection(database.mongodb.collections.utils, fn)

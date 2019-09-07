@@ -1,35 +1,44 @@
 import re
 
-core_fields = ['title', 'identifier', 'lang3', '_type', 'sourcerecordid', 'subject', 'frbr_type', 'date', 'topic',
-               'creator', 'source_system', 'pnx_id', 'source_id', "context"]
+from utils import receives_config, ConfigMap
 
 excluded_fields = ["_id"]
 
 """ Map core fields to other names """
-mapped_fields = {"pnx_id": "_id"}
-
-core_fields = list(mapped_fields.get(key, key) for key in core_fields)
 
 
-def convert_field_names(name: str):
+# mapped_fields = {"pnx_id": "_id"}
+
+# core_fields = list(mapped_fields.get(key, key) for key in core_fields)
+
+
+def convert_field_names(name: str, primo: ConfigMap):
     name = name.replace("@", "_")
     fixed = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     fixed = re.sub('([a-z0-9])([A-Z])', r'\1_\2', fixed).lower()
-    mapped = mapped_fields.get(fixed, fixed)
+    mapped = primo.name_mapping.get(fixed, fixed)
     return mapped
 
 
-def transform(input_data: dict) -> dict:
+@receives_config("primo")
+def transform(input_data: dict, primo: ConfigMap) -> dict:
     output_data = {}
     for key, value in input_data.items():
-        output_data[convert_field_names(key)] = value
+        key = convert_field_names(key, primo)
+        if key in primo.excluded_fields:
+            continue
+        output_data[key] = value
+
+    output_data["_id"] = output_data.pop(primo.key_by)
+
+    common_fields = list(primo.name_mapping.get(key, key) for key in primo.common_fields)
 
     core_data = {
-        key: output_data[key] for key in core_fields
+        key: output_data[key] for key in common_fields
     }
 
     extra_data = {
-        key: output_data[key] for key in output_data if key not in core_fields
+        key: output_data[key] for key in output_data if key not in common_fields
     }
 
     core_data["extra_fields"] = extra_data

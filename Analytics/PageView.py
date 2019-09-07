@@ -23,11 +23,11 @@ class PageView:
 
     @property
     def doc_id(self):
-        return self._query.get("docid", None)
+        return self._query.get("docid", [None])[0]
 
     @property
     def context(self):
-        return self._query.get("context", None)
+        return self._query.get("context", [None])[0]
 
     @property
     def _minutes_ago(self):
@@ -51,6 +51,16 @@ class PageView:
             "time": self.when
         })
 
+    @property
+    def mongo_representation(self):
+        return {
+            "doc_id": self.doc_id,
+            "context": self.context,
+            "city": self.city,
+            "country": self.country,
+            "time": self.when
+        }
+
     @MongoBase.with_book_collection
     def get_book(self, books: Collection):
-        return books.find(self.doc_id)
+        return books.find_one(self.doc_id)

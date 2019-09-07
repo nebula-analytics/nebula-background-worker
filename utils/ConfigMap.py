@@ -9,13 +9,13 @@ class ConfigMap:
     """
     A configuration mapper to make config access simpler
     """
+
     @classmethod
     def get_singleton(cls):
         if cls.__singleton__ is None:
             path = os.getenv("nebula.config.path", "./config.yaml")
             cls.__singleton__ = cls.load(path)
         return cls.__singleton__
-
 
     @classmethod
     def load(cls, path: str) -> 'ConfigMap':
@@ -89,7 +89,7 @@ class ConfigMap:
         :param item: The key to lookup
         :param default: The value to return if no such key exists in the environment
         or config file
-        :param map_children: Will convert dictionary values into ConfigMap if true
+        :param json_response: If true, this will return a json-compatible response
         :return: A config dictionary or value
         """
         environ_key = f"{self.__path__}.{item}"
