@@ -3,6 +3,7 @@ from math import ceil
 from typing import Optional, Union
 
 from celery import Celery
+from celery_once import QueueOnce
 
 from Analytics.PageView import PageView
 from Analytics.helpers import generate_view_rows
@@ -15,7 +16,7 @@ app = Celery("schedule")
 receives_config("celery", as_json=True)(app.config_from_object)()
 
 
-@app.task
+@app.task(base=QueueOnce, once={"graceful": True})
 def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional[Union[str, dict]]:
     """
     Request a primo record
@@ -87,6 +88,10 @@ def sync_views():
 
 @app.task()
 def sync_books():
+    """
+    Locate all views which have no matching book record
+    :return:
+    """
     views = MongoBase.get_view_collection()
     pipeline = [
         {
@@ -101,16 +106,11 @@ def sync_books():
             "$match": {"matched_docs": {"$eq": []}}
         }
     ]
-    scheduled = app.control.inspect().scheduled()
-    for queue in scheduled:
-        tasks = filter(lambda x: x['name'] == request_record.name, scheduled[queue])
-        count = 0
-        for view in views.aggregate(pipeline):
-            if any(view["doc_id"] == task["args"][0] for task in tasks):
-                continue
-            request_record.s(view["doc_id"], view["context"]).apply_async()
-            count += 1
-        print(f"{count} record syncs added to view")
+    count = 0
+    for view in views.aggregate(pipeline):
+        request_record.s(view["doc_id"], view["context"]).apply_async()
+        count += 1
+    print(f"{count} record syncs added to view")
 
 
 @app.task
