@@ -75,3 +75,26 @@ class MongoBase:
     @receives_config("database")
     def with_utils_collection(cls, fn, database=None):
         return cls._with_collection(database.mongodb.collections.utils, fn)
+
+
+json_convert_pipeline = [{"$group": {"_id": "$doc_id", "count": {"$sum": 1}, "last_viewed": {"$max": "$time"}}},
+                         {"$lookup": {
+                             "from": "books",
+                             "localField": "_id",
+                             "foreignField": "_id",
+                             "as": "matched"
+                         }},
+
+                         {"$unwind": "$matched"},
+                         {"$addFields": {"matched.count": "$count", "matched.last_view": "$last_viewed"}},
+                         {"$replaceRoot": {"newRoot": "$matched"}},
+                         {"$project": {
+                             "doc_id": "$id",
+                             "title": "$title",
+                             "identifiers": "$identifier",
+                             "language": "$lang3",
+                             "record_type": "$_type",
+                             "extra_fields": "$extra_fields",
+                             "count": "$count",
+                             "last_view": "$last_view"
+                         }}]
