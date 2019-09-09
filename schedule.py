@@ -1,9 +1,8 @@
-from datetime import datetime
-from math import ceil
+from datetime import datetime, timedelta
+from math import floor
 from typing import Optional, Union
 
 from celery import Celery
-from celery_once import QueueOnce
 
 from Analytics.PageView import PageView
 from Analytics.helpers import generate_view_rows
@@ -16,7 +15,10 @@ app = Celery("schedule")
 receives_config("celery", as_json=True)(app.config_from_object)()
 
 
-@app.task(base=QueueOnce, once={"graceful": True})
+# MongoBase.get_book_collection().create_index([("doc_id", pymongo.TEXT)], unique=True)
+
+
+@app.task
 def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional[Union[str, dict]]:
     """
     Request a primo record
@@ -27,39 +29,35 @@ def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional
     :return: The primo response
     """
     primo = ConfigMap.get_singleton().primo
-
-    if book_exists(doc_id):
-        return print(f"[{doc_id}, {context}] Book exists, aborting")
+    update_record(doc_id, status="processing")
 
     book, status = get_book(doc_id, context)
 
     if status != 200:
-        return print(f"[{doc_id}, {context}] HTTP {status} error from Primo")
+        update_record(doc_id, status="failed", status_values={"message": f"HTTP {status}", "body": book})
+        raise RuntimeError("Non-Ok status returned by primo")
 
     if len(book) == 1:
-        print(f"[{doc_id}, {context}] Encountered empty result")
-
         alt_context = primo.contexts[primo.contexts.index(context) - 1]
         if alt_context not in attempted_contexts:
             request_record.s(doc_id, alt_context, attempted_contexts=[*attempted_contexts, context]).apply_async()
-
-            print(f"[{doc_id}, {context}] Attempting alt context")
+            return f"[{doc_id}, {context}] Attempting alt context"
         else:
             """ Prevent book from being resynced """
-            store_record({
+            update_record(**{
                 "_id": doc_id,
-                "valid": False,
-                "more": {
+                "status": "failed",
+                "status_values": {
                     "reason": "Unable to locate book",
                     "contexts": attempted_contexts,
                     "response": book
                 }
 
             })
-        return None
+        return f"[{doc_id}, {context}] Book not located"
     print(f"[{doc_id}, {context}] Inserted Book")
     book = transform(book)
-    return store_record(book)
+    return update_record(**book, status="processed", status_values={})
 
 
 @app.task()
@@ -69,7 +67,7 @@ def sync_views():
     last_query = utils.find_one("last_analytics_sync")
     minutes_ago = None
     if last_query:
-        minutes_ago = ceil((datetime.now() - last_query["time"]).total_seconds() / 60)
+        minutes_ago = floor((datetime.now() - last_query["time"]).total_seconds() / 60)
         utils.update_one({"_id": "last_analytics_sync"}, {
             "$set": {"time": datetime.now()}
         })
@@ -79,11 +77,14 @@ def sync_views():
             "time": datetime.now()
         })
     rows = generate_view_rows(minutes_ago)
-    views = list(PageView(*row).mongo_representation for row in rows)
+    views = list(PageView(*row) for row in rows)
+    views = list(filter(PageView.exists, views))
 
-    collection = MongoBase.get_view_collection()
-    collection.insert_many(views)
-    print(f"{len(rows)} documents added to database")
+    if views:
+        collection = MongoBase.get_view_collection()
+        print(f"{len(views)} documents added to database")
+        return collection.insert_many(list(v.mongo_representation for v in views))
+    print("No new views since last request")
 
 
 @app.task()
@@ -93,24 +94,47 @@ def sync_books():
     :return:
     """
     views = MongoBase.get_view_collection()
+    books = MongoBase.get_book_collection()
+
     pipeline = [
         {
+            "$group": {"_id": "$doc_id", "context": {"$first": "$context"}}
+        }, {
             "$lookup": {
                 "from": "books",
-                "localField": "doc_id",
-                "foreignField": "_id",
+                "localField": "_id",
+                "foreignField": "doc_id",
                 "as": "matched_docs"
             }
         },
         {
-            "$match": {"matched_docs": {"$eq": []}}
+            "$match": {
+                "$or": [
+                    {"matched_docs": {"$eq": []}},
+                    {"$and": [
+                        {"matched_docs.task.retry_at": {"$lte": datetime.now()}},
+                        {"matched_docs.status": {"$not": {"$in": ["failed", "processed"]}}}
+                    ]}
+                ]}
         }
     ]
-    count = 0
-    for view in views.aggregate(pipeline):
-        request_record.s(view["doc_id"], view["context"]).apply_async()
-        count += 1
-    print(f"{count} record syncs added to view")
+
+    queue = list(
+        {
+            "doc_id": view["_id"],
+            "status": "queued",
+            "status_values": {
+                "record": view,
+            },
+            "task": {
+                "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
+                "retry_at": datetime.now() + timedelta(minutes=20),
+            }
+        }
+        for view in views.aggregate(pipeline)
+    )
+    if queue:
+        books.insert_many(queue)
 
 
 @app.task

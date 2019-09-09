@@ -43,24 +43,45 @@ class PageView:
 
     @MongoBase.with_view_collection
     def store(self, views: Collection):
-        views.insert_one({
-            "doc_id": self.doc_id,
-            "context": self.context,
-            "city": self.city,
-            "country": self.country,
-            "time": self.when
-        })
+        """
+        @deprecated
+        store this page view
+        :param views:
+        :return:
+        """
+        views.insert_one(self.mongo_representation)
 
     @property
     def mongo_representation(self):
+        """
+        Create a mongo friendly view object
+        :return:
+        """
         return {
             "doc_id": self.doc_id,
             "context": self.context,
             "city": self.city,
             "country": self.country,
-            "time": self.when
+            "count": self._count,
+            "at": self.when
         }
 
     @MongoBase.with_book_collection
     def get_book(self, books: Collection):
         return books.find_one(self.doc_id)
+
+    def exists(self):
+        """
+        Look for matching views in the last minute
+        :return:
+        """
+        return MongoBase.get_view_collection().aggregate([{
+            "$match": {
+                "$and": [
+                    {"doc_id": {"$eq": self.doc_id}},
+                    {"city": {"$eq": self.city}},
+                    {"country": {"$eq": self.country}},
+                    {"at": {"$lt": self.when - timedelta(minutes=1)}},
+                ]
+            }
+        }]) is not None

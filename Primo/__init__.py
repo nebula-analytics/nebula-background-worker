@@ -8,7 +8,7 @@ from utils.MongoBase import MongoBase
 
 @MongoBase.with_book_collection
 def book_exists(doc_id: str, books: Collection):
-    return books.find_one(doc_id) is not None
+    return books.find_one({"doc_id": doc_id}) is not None
 
 
 @receives_config("primo")
@@ -30,9 +30,11 @@ def get_book(doc_id: str, context: str, primo: ConfigMap):
     return response.json(), response.status_code
 
 
-@MongoBase.with_book_collection
-def store_record(record: dict, books: Collection):
-    if not book_exists(record["_id"]):
-        insert = books.insert_one(record)
-        return insert.inserted_id
-    return None
+def update_record(_id: str, **record):
+    books = MongoBase.get_book_collection()
+    result = books.update_one({
+        "doc_id": _id
+    }, {
+        "$set": record
+    })
+    return result.upserted_id
