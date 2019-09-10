@@ -83,7 +83,7 @@ def sync_views():
     if views:
         collection = MongoBase.get_view_collection()
         print(f"{len(views)} documents added to database")
-        return collection.insert_many(list(v.mongo_representation for v in views))
+        return repr(collection.insert_many(list(v.mongo_representation for v in views)))
     print("No new views since last request")
 
 
