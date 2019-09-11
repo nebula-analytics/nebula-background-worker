@@ -1,16 +1,42 @@
 Project Nebula Analytics/Oauth Demo
 ========
 
-Setup
+Development Setup
 -----
 Ensure you have python 3.7+ installed.
 
-Install required libs:
-`pip install -r requirements.txt`.
+####Dependencies:
+In order to run the worker, you will need to install the following.
+- Python (Version > 3.7)
+- RabbitMQ
+- MongoDB
+- Redis (Optional for debugging)
 
-Use another application to generate a pickled oauth credential
-such as https://github.com/nebula-analytics/nebula-ganalytics-poc
+###### Linux (Ubuntu)
+`sudo apt update && sudo apt-get install rabbitmq mogodb redis python3`
 
+
+TODO: Add instructions for running each application
+###### MacOS
+`brew install rabbitmq mogodb redis`
+
+TODO: Add instructions for running each application
+
+#### Installing Python Libraries
+
+Install python dependencies:
+`pip3 install -r requirements.txt`.
+
+#### Configure the worker (TODO: Automate)
+Add the required fields listed below to config.yaml
+
+- analytics:
+    - path_to_credentials:
+        - Use another application to generate a pickled oauth credential such as https://github.com/nebula-analytics/nebula-ganalytics-poc
+    - view_id:
+        - Locate the id of the analytics view you want to target
+        
+        
 Run
 -----
 In terminal navigate to the directory of main.py.
