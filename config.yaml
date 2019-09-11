@@ -24,15 +24,20 @@ database:
 
 celery:
   broker_url: 'amqp://localhost'
-  result_backend: 'amqp://localhost'
+  result_backend: 'redis://localhost:6379/0'
 
   task_serializer: 'json'
   result_serializer: 'json'
   accept_content: ['json']
   timezone: 'Australia/Melbourne'
 
+  task_routes: {
+    schedule.request_record: {queue: 'nebula.import'},
+    schedule.sync*: {queue: 'nebula.express'}
+  }
+
   task_annotations: {
-    'schedule.request_record': {'rate_limit': '15/m'},
+    'schedule.request_record': {'rate_limit': '5/s'},
   }
 
   beat_schedule: {
