@@ -20,6 +20,7 @@ database:
     collections:
       views: "views"
       books: "books"
+      utils: "utils"
 
 
 celery:

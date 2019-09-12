@@ -16,6 +16,14 @@ services:
   node_1:
     build: "."
     command:  "python -m celery -A schedule worker --loglevel=DEBUG -Q nebula.express,nebula.import -n node_1"
+    environment: &celery_env
+      nebula.database.mongodb.host: "mongo"
+      nebula.database.mongodb.username: "root"
+      nebula.database.mongodb.password: "example"
+
+      nebula.celery.broker_url: "amqp://message_queue"
+      nebula.celery.result_backend: "amqp://message_queue"
+
     depends_on: &celery_deps
       - mongo
       - message_queue
@@ -26,12 +34,16 @@ services:
     command:  "python -m celery -A schedule worker --loglevel=DEBUG -Q nebula.express, -n node_2"
     depends_on:
       *celery_deps
+    environment:
+      *celery_env
 
   node_scheduler:
     build: "."
     command: "celery beat -A schedule --loglevel=INFO"
     depends_on:
       *celery_deps
+    environment:
+      *celery_env
 
   mongo-express:
     image: mongo-express
