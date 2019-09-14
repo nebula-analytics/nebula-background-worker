@@ -45,7 +45,7 @@ class GAuth:
     @classmethod
     def build_access(cls, service: str, version: str):
         token = cls._get_token()
-        return build(service, version, credentials=token)
+        return build(service, version, credentials=token, cache_discovery=False)
 
     @classmethod
     def _get_token(cls):
