@@ -44,18 +44,20 @@ class PageView:
     @MongoBase.with_view_collection
     def store(self, views: Collection):
         """
-        @deprecated
-        store this page view
-        :param views:
-        :return:
+            Store this page view to MonogoDB
+            Args:
+                views (Collection) : list of views from Google Analytics
+            Returns:
+
         """
         views.insert_one(self.mongo_representation)
 
     @property
     def mongo_representation(self):
         """
-        Create a mongo friendly view object
-        :return:
+            Create this page view object to store in MonogoDB
+            Returns:
+                Page View json object
         """
         return {
             "doc_id": self.doc_id,
@@ -72,8 +74,10 @@ class PageView:
 
     def exists(self):
         """
-        Look for matching views in the last minute
-        :return:
+            Look for matching views in the last minute
+            Returns:
+                True if the view exists in last minute
+                False if not
         """
         return MongoBase.get_view_collection().aggregate([{
             "$match": {
