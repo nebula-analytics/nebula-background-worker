@@ -13,7 +13,7 @@ class ConfigMap:
     @classmethod
     def get_singleton(cls):
         if cls.__singleton__ is None:
-            path = os.getenv("nebula.config.path", "./config.yaml")
+            path = f"{os.path.split(os.path.dirname(__file__))[0]}/config.yaml"
             cls.__singleton__ = cls.load(path)
         return cls.__singleton__
 
@@ -26,8 +26,7 @@ class ConfigMap:
             Returns:
                 A config map object
         """
-
-        with open("C:\\Users\\Admin\\Desktop\\Capstone\\nebula-background-worker\\config.yaml.secret", "r") as config_f:
+        with open(path, "r") as config_f:
             config = yaml.safe_load(config_f)
         return ConfigMap(config)
 
