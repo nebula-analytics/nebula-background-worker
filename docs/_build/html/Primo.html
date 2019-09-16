@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Primo package &#8212; nebula  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main module" href="main.html" />
+    <link rel="prev" title="Analytics package" href="Analytics.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="main.html" title="main module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Analytics.html" title="Analytics package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">nebula  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">nebula-background-worker</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="primo-package">
+<h1>Primo package<a class="headerlink" href="#primo-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Primo.transform">
+<span id="primo-transform-module"></span><h2>Primo.transform module<a class="headerlink" href="#module-Primo.transform" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Primo.transform.convert_field_names">
+<code class="sig-prename descclassname">Primo.transform.</code><code class="sig-name descname">convert_field_names</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">primo: utils.ConfigMap.ConfigMap</em><span class="sig-paren">)</span><a class="headerlink" href="#Primo.transform.convert_field_names" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – field name from json record in database</p>
+</dd>
+</dl>
+<p>Raises:
+Returns:</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="Primo.transform.excluded_fields">
+<code class="sig-prename descclassname">Primo.transform.</code><code class="sig-name descname">excluded_fields</code><em class="property"> = ['_id']</em><a class="headerlink" href="#Primo.transform.excluded_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map core fields to other names</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-Primo">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Primo" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Primo.update_record">
+<code class="sig-prename descclassname">Primo.</code><code class="sig-name descname">update_record</code><span class="sig-paren">(</span><em class="sig-param">_id: str</em>, <em class="sig-param">**record</em><span class="sig-paren">)</span><a class="headerlink" href="#Primo.update_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update record of books collection in MongoDB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_id</strong> (<em>str</em>) – doc_id of a document in Primo Database</p></li>
+<li><p><strong>record</strong> – new record</p></li>
+</ul>
+</dd>
+</dl>
+<p>Raises:
+:returns: The _id of the inserted document if an upsert took place. Otherwise <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Primo package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-Primo.transform">Primo.transform module</a></li>
+<li><a class="reference internal" href="#module-Primo">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Analytics.html"
+                        title="previous chapter">Analytics package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="main.html"
+                        title="next chapter">main module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Primo.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="main.html" title="main module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Analytics.html" title="Analytics package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">nebula  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >nebula-background-worker</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, jeff.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>
