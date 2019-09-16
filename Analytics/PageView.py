@@ -75,13 +75,13 @@ class PageView:
         Look for matching views in the last minute
         :return:
         """
-        return MongoBase.get_view_collection().aggregate([{
+        return bool(list(MongoBase.get_view_collection().aggregate([{
             "$match": {
                 "$and": [
                     {"doc_id": {"$eq": self.doc_id}},
                     {"city": {"$eq": self.city}},
                     {"country": {"$eq": self.country}},
-                    {"at": {"$lt": self.when - timedelta(minutes=1)}},
+                    {"at": {"$lt": self.when + timedelta(minutes=1)}},
                 ]
             }
-        }]) is not None
+        }])))
