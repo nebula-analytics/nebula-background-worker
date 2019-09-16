@@ -26,7 +26,8 @@ class ConfigMap:
             Returns:
                 A config map object
         """
-        with open(path, "r") as config_f:
+
+        with open("C:\\Users\\Admin\\Desktop\\Capstone\\nebula-background-worker\\config.yaml.secret", "r") as config_f:
             config = yaml.safe_load(config_f)
         return ConfigMap(config)
 

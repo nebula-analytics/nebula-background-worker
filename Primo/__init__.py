@@ -23,7 +23,8 @@ def book_exists(doc_id: str, books: Collection):
 @receives_config("primo")
 def get_book(doc_id: str, context: str, primo: ConfigMap):
     """
-    Retrieve book information from Primo
+        Retrieve book information from Primo.
+
         Args:
             doc_id (str): doc_id of a document in Primo Database
             context (str): Primo context, L or PC
@@ -50,7 +51,8 @@ def get_book(doc_id: str, context: str, primo: ConfigMap):
 
 def update_record(_id: str, **record):
     """
-    update record of books collection in MongoDB
+        Update record of books collection in MongoDB.
+
         Args:
             _id (str): doc_id of a document in Primo Database
             record : new record

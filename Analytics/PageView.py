@@ -74,10 +74,11 @@ class PageView:
 
     def exists(self):
         """
-            Look for matching views in the last minute
+            Look for matching views in the last minute.
+            
             Returns:
-                True if the view exists in last minute
-                False if not
+                True if the view exists in last minute.
+                False if not.
         """
         return MongoBase.get_view_collection().aggregate([{
             "$match": {
