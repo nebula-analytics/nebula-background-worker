@@ -81,13 +81,12 @@ def sync_views():
         })
     rows = generate_view_rows(minutes_ago)
     views = list(PageView(*row) for row in rows)
-    views = list(filter(PageView.exists, views))
+    views = list(view for view in views if not view.exists())
 
+    print(f"[Sync Views] {len(views)} new views received from analytics")
     if views:
         collection = MongoBase.get_view_collection()
-        print(f"{len(views)} documents added to database")
         return repr(collection.insert_many(list(v.mongo_representation for v in views)))
-    print("No new views since last request")
 
 
 @app.task()
@@ -98,13 +97,14 @@ def sync_books():
     """
     views = MongoBase.get_view_collection()
     books = MongoBase.get_book_collection()
+    collections = ConfigMap.get_singleton().database.mongodb.collections
 
     pipeline = [
         {
             "$group": {"_id": "$doc_id", "context": {"$first": "$context"}}
         }, {
             "$lookup": {
-                "from": "books",
+                "from": collections.books,
                 "localField": "_id",
                 "foreignField": "doc_id",
                 "as": "matched_docs"
@@ -131,11 +131,12 @@ def sync_books():
             },
             "task": {
                 "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
-                "retry_at": datetime.now() + timedelta(hours=24),
+                "retry_at": datetime.now() + timedelta(days=1),
             }
         }
         for view in views.aggregate(pipeline)
     )
+    print(f"[Sync Books] {len(queue)} books in diff")
     if queue:
         books.insert_many(queue)
 

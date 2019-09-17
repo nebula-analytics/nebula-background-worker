@@ -1,53 +1,82 @@
-Project Nebula Analytics/Oauth Demo
+Project Nebula Analytics / Background Worker
 ========
 
-Development Setup
+Installation
 -----
 Ensure you have python 3.7+ installed.
 
-####Dependencies:
-In order to run the worker, you will need to install the following.
-- Python (Version > 3.7)
-- RabbitMQ
-- MongoDB
-- Redis (Optional for debugging)
+```brew install python ```
 
-###### Linux (Ubuntu)
-`sudo apt update && sudo apt-get install rabbitmq mogodb redis python3`
+Finally, you will need to install mongodb for use as a data store.
 
+```brew install mongodb```
 
-TODO: Add instructions for running each application
-###### MacOS
-`brew install rabbitmq mogodb redis`
+Additionally, you will need to install a message queue client, rabbitmq is recommended.
 
-TODO: Add instructions for running each application
+```brew install rabbitmq```
 
-#### Installing Python Libraries
+Setup
+-----
 
 Install python dependencies:
-`pip3 install -r requirements.txt`.
+`pip install -r requirements.txt`.
 
-#### Configure the worker (TODO: Automate)
-Add the required fields listed below to config.yaml
 
-- analytics:
-    - path_to_credentials:
-        - Use another application to generate a pickled oauth credential such as https://github.com/nebula-analytics/nebula-ganalytics-poc
-    - view_id:
-        - Locate the id of the analytics view you want to target
-        
-        
-Run
------
-In terminal navigate to the directory of main.py.
+such as https://github.com/nebula-analytics/nebula-ganalytics-poc
 
-1. Running `python main.py` or `python main.py --help` 
-should display a guide to the arguments
+In the [config.yaml](config.yaml) fill out the following fields:
+```yaml
+analytics:
+  path_to_credentials: Use another application to generate a pickled oauth credential, put the path to the credentials in this field
+  view_id: This should be set to the valid view id for the account referenced in the above credentials
+primo:
+  host: This value should be set to a valid promo host ending in /pnxs, see https://developers.exlibrisgroup.com/primo/apis/webservices/rest/pnxs/
+```
 
-2. To view a list of available accounts run the command 
-`python main.py '<path_to_pickled_credentials>'` 
+You may need to modify other options in the model.config if you are operating 
+in an environment with credentials. **TODO: Document config options**
 
-3. To start the background worker you will need to specify 
-the analytics view to target as follows.
-`python main.py '<path_to_pickled_credentials>' --view_id '<analytics_view_id>'`
-    
+Deployment
+----------
+
+#### Development Environment
+
+##### Mac OS & Linux
+
+You can run the scheduler, and a single worker for both queues application with the following command
+
+```
+python -m celery -A schedule worker -B --loglevel=debug -c=2 -Q nebula.express,nebula.import
+```
+
+##### Windows
+
+On windows, the -B development option is not available, you can run a worker node using the following command.
+```
+python -m celery -A schedule worker --loglevel=debug -c=2 -Q nebula.express,nebula.import
+```
+
+With the worker node added, you can start the scheduler with the command below.
+```
+python -m celery -A schedule beat --loglevel=debug
+```
+
+#### Production Environment
+
+A Production deployment process is being developed, in the mean time
+the recommended deployment process is as follows
+
+```
+# Purge the queue of stale events
+celery -A schedule purge -Q nebula.express,nebula.import
+
+# Start the import queue.
+python -m celery -A schedule worker --loglevel=debug -c=2 -Q nebula.import
+
+# Start the short sync event queue 
+python -m celery -A schedule worker --loglevel=debug -c=2 -Q nebula.express
+
+# Start the scheduler
+python -m celery -A schedule beat --loglevel=debug
+```
+
