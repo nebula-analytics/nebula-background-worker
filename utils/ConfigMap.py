@@ -1,7 +1,20 @@
+import inspect
 import os
+from collections import ChainMap
 from typing import Iterable, Dict, Any, Union
 
 import yaml
+
+import utils
+from utils.Config import defaults
+
+module_path = os.path.sep.join(inspect.getabsfile(utils).split(os.path.sep)[:-2])
+
+discovery_paths = [
+    os.getenv("nebula.config.path", ""),
+    f"{module_path}/config.yaml.secret",
+    f"{module_path}/config.yaml",
+]
 
 
 class ConfigMap:
@@ -13,8 +26,7 @@ class ConfigMap:
     @classmethod
     def get_singleton(cls):
         if cls.__singleton__ is None:
-            path = os.getenv("nebula.config.path", "./config.yaml")
-            cls.__singleton__ = cls.load(path)
+            cls.__singleton__ = cls.load(*discovery_paths)
         return cls.__singleton__
 
     @classmethod
@@ -26,9 +38,12 @@ class ConfigMap:
             Returns:
                 A config map object
         """
+        config = ChainMap(defaults)
+        for path in reversed(paths):
+            if os.path.isfile(path):
         with open(path, "r") as config_f:
-            config = yaml.safe_load(config_f)
-        return ConfigMap(config)
+                    config = config.new_child(yaml.safe_load(config_f))
+        return cls(config)
 
     def __init__(self, values: Dict[str, Any], key: str = "nebula", parents: Iterable = ()):
         """
