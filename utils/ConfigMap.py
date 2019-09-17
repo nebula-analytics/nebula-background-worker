@@ -1,7 +1,19 @@
+import inspect
 import os
+from collections import ChainMap
 from typing import Iterable, Dict, Any, Union
 
 import yaml
+
+import utils
+
+module_path = os.path.sep.join(inspect.getabsfile(utils).split(os.path.sep)[:-2])
+
+discovery_paths = [
+    os.getenv("nebula.config.path", ""),
+    f"{module_path}/config.yaml.secret",
+    f"{module_path}/config.yaml",
+]
 
 
 class ConfigMap:
@@ -13,24 +25,18 @@ class ConfigMap:
     @classmethod
     def get_singleton(cls):
         if cls.__singleton__ is None:
-            path = os.getenv("nebula.config.path", "./config.yaml")
-            cls.__singleton__ = cls.load(path)
+            cls.__singleton__ = cls.load(*discovery_paths)
         return cls.__singleton__
 
     @classmethod
-    def load(cls, path: str) -> 'ConfigMap':
+    def load(cls, *paths: str) -> 'ConfigMap':
         """
             Load the yaml config and create a ConfigMap
             Args:
-                path (str) : path to config.yaml file
+                paths (str) : Any number of arguments, paths take priority based on order, with index(0) being highest
             Returns:
                 A config map object
         """
-
-        with open("C:\\Users\\Admin\\Desktop\\Capstone\\nebula-background-worker\\config.yaml.secret", "r") as config_f:
-            config = yaml.safe_load(config_f)
-        return ConfigMap(config)
-
     def __init__(self, values: Dict[str, Any], key: str = "nebula", parents: Iterable = ()):
         """
             Set up the mapper
@@ -91,8 +97,6 @@ class ConfigMap:
             ie: for key in config:
             Notes:
                 This method will not support additional environment keys
-            Args:
-                item (str): The key to look up
             Returns:
 
         """
