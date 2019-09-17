@@ -10,11 +10,12 @@ install:
     - pip --version
     - pip install -r requirements.txt
     - pip install -U sphinx
-    - pip install travis-sphinx
-    - export PATH=$HOME/.local/bin:$PATH
 
 script:
-    - travis-sphinx build --source=docs
+    - cd docs
+    - sphinx-apidoc -o . .. -f
+    - make html
+
 
 after_success:
-    - travis-sphinx deploy --branches documents
+  - ./push.sh
