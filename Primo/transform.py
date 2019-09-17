@@ -13,6 +13,12 @@ excluded_fields = ["_id"]
 
 
 def convert_field_names(name: str, primo: ConfigMap):
+    """
+        Args:
+            name (str) : field name from json record in database
+        Raises:
+        Returns:
+    """
     name = name.replace("@", "_")
     fixed = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     fixed = re.sub('([a-z0-9])([A-Z])', r'\1_\2', fixed).lower()
@@ -22,6 +28,15 @@ def convert_field_names(name: str, primo: ConfigMap):
 
 @receives_config("primo")
 def transform(input_data: dict, primo: ConfigMap) -> dict:
+    """
+        Process primo record to store in database
+        Args:
+            input_data (dict) : tuple of json for book information and status code of response
+            primo (ConfigMap):
+        Raises:
+        Returns:
+            core_data: formatted book record to store in database
+    """
     output_data = {}
     for key, value in input_data.items():
         key = convert_field_names(key, primo)
