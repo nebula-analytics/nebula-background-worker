@@ -12,7 +12,7 @@ install:
     - pip install travis-sphinx
 
 script:
-    - travis-sphinx build --branches documents
+    - travis-sphinx build --source=docs
 
 after_success:
     - travis-sphinx deploy --branches documents
