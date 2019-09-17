@@ -1,7 +1,19 @@
+import inspect
 import os
+from collections import ChainMap
 from typing import Iterable, Dict, Any, Union
 
 import yaml
+
+import utils
+
+module_path = os.path.sep.join(inspect.getabsfile(utils).split(os.path.sep)[:-2])
+
+discovery_paths = [
+    os.getenv("nebula.config.path", ""),
+    f"{module_path}/config.yaml.secret",
+    f"{module_path}/config.yaml",
+]
 
 
 class ConfigMap:
@@ -13,22 +25,24 @@ class ConfigMap:
     @classmethod
     def get_singleton(cls):
         if cls.__singleton__ is None:
-            path = f"{os.path.split(os.path.dirname(__file__))[0]}/config.yaml"
-            cls.__singleton__ = cls.load(path)
+            cls.__singleton__ = cls.load(*discovery_paths)
         return cls.__singleton__
 
     @classmethod
-    def load(cls, path: str) -> 'ConfigMap':
+    def load(cls, *paths: str) -> 'ConfigMap':
         """
             Load the yaml config and create a ConfigMap
             Args:
-                path (str) : path to config.yaml file
+                paths (str) : Any number of arguments, paths take priority based on order, with index(0) being highest
             Returns:
                 A config map object
         """
-        with open(path, "r") as config_f:
-            config = yaml.safe_load(config_f)
-        return ConfigMap(config)
+        config = ChainMap({})
+        for path in reversed(paths):
+            if os.path.isfile(path):
+                with open(path, "r") as config_f:
+                    config = config.new_child(yaml.safe_load(config_f))
+        return cls(config)
 
     def __init__(self, values: Dict[str, Any], key: str = "nebula", parents: Iterable = ()):
         """
@@ -57,7 +71,6 @@ class ConfigMap:
                 item (str): The key to look up
             Returns:
                 ConfigMap object ie: config.primo
-
         """
         return self.get(item)
 
@@ -68,7 +81,6 @@ class ConfigMap:
                 item (str): The key to look up
             Returns:
                 ConfigMap object ie: config.primo
-
         """
         return self.get(item)
 
@@ -90,10 +102,7 @@ class ConfigMap:
             ie: for key in config:
             Notes:
                 This method will not support additional environment keys
-            Args:
-                item (str): The key to look up
             Returns:
-
         """
         return iter(self.__values__)
 
@@ -106,7 +115,6 @@ class ConfigMap:
                 json_response: If true, this will return a json-compatible response
             Returns:
                 A config dictionary or value
-
         """
         environ_key = f"{self.__path__}.{item}"
         if environ_key in os.environ:
