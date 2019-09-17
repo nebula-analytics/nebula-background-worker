@@ -1,21 +1,18 @@
-# Config file for automatic testing at travis-ci.org
-
 language: python
 python:
-  - 3.7
+- 3.7
 notifications:
   email: false
-
 install:
-    - pip --version
-    - pip install -r requirements.txt
-    - pip install -U sphinx
-
+- pip --version
+- pip install -r requirements.txt
+- pip install -U sphinx
 script:
-    - cd docs
-    - sphinx-apidoc -o . .. -f
-    - make html
-
-
+- cd docs
+- sphinx-apidoc -o . .. -f
+- make html
 after_success:
-  - ./push.sh
+- "./push.sh"
+env:
+  global:
+    secure: vMSzbm9cCcGbAAfvd3Si9WtIk2NV1YcydepiKyXRkM3SqUkzaofJqDi9KFMt5AQlM0tViAK0RQ6ICTkXhZaRtcoizylNqvRTo5ErNS0o2O2DsHgP+l7CpSgy5vb2BK9qnEmzgPo41OkABTzkT+1mSkqeNt0K/k6lavSnkXvF3i0hXpYuMkQDqs8e7BT/7cF36cTNjAhQ/dR8oTlV4deI9SHJtBASAdCpM4i9qcheiQcyXP35bAdvuzKzFbuqWGa4Liqx1avk1J2HzXwVgvFVW8bJaMy4VCu1Fa8wEptVjxr7qDjbBlp3ImnRWXXb6V1K/n98GrpRugZEpCaQYQ8EKrITY8TqHe4D4UgH4Au46TvieChFlih5vtGY7MJnWwp5UkzPgr4BaJtdp8EAfZmzcBwyJukocyM8CZEgDuqWygwV3ClTPM4PrExqVySsPgUj2QnD9HVXlMZ9sTbT48/xaIL6QtUX8aSmW9Xlkw/E2S2ZxpSVfiLpTLWizAIho2IE6n8K1NIUrceTJK2ypLktRHh9Unpj0R4k9NUYVt2squ0OLsKzpF4+mlEY5kaI3l1L4OfcDPKaUsIwJmQQ8VcWNfe55E4xf5IEeOGwRaDUgSYfQng3NY/xljUWCh2CB2JrsnGlPPld7gcQXQlhGIrKsfcPvXTxYoUjwZcrLqKFe78=
