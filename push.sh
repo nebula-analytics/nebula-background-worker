@@ -1,6 +1,28 @@
 #!/usr/bin/env bash
 # Push HTML files to gh-pages automatically.
 
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -u|--username)
+    USERNAME="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -p|--password)
+    PASSWORD="$2"
+    shift # past argument
+    shift # past value
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional
+
+
 # Fill this out with the correct org/repo
 ORG=nebula-analytics
 REPO=nebula-background-worker
@@ -12,7 +34,7 @@ set -e
 
 # Clone the gh-pages branch outside of the repo and cd into it.
 cd ..
-git clone -b gh-pages "https://$USRNAME:$GH_TOKEN@github.com/$ORG/$REPO.git" gh-pages
+git clone -b gh-pages "https://$USERNAME:$PASSWORD@github.com/$ORG/$REPO.git" gh-pages
 cd gh-pages
 
 # Update git configuration so I can push.
