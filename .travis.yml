@@ -3,16 +3,12 @@
 language: python
 python:
   - 3.7
-# before_install will simply setup a conda enviroment for installing python packages, if you
-# have project dependencies it's usually recommended to go this route
 notifications:
   email: false
 
 install:
     - pip --version
-    - pip install --upgrade pip
     - pip install -U sphinx
-    - pip install -r requirements.txt
     - pip install --user travis-sphinx
 
 script:
