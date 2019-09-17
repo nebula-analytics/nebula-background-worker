@@ -28,36 +28,39 @@ def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional
     :param context: The primo context, L or PC
     :return: The primo response
     """
-    primo = ConfigMap.get_singleton().primo
-    update_record(doc_id, status="processing")
+    try:
+        primo = ConfigMap.get_singleton().primo
+        update_record(doc_id, status="processing")
 
-    book, status = get_book(doc_id, context)
+        book, status = get_book(doc_id, context)
 
-    if status != 200:
-        update_record(doc_id, status="failed", status_values={"message": f"HTTP {status}", "body": book})
-        raise RuntimeError("Non-Ok status returned by primo")
+        if status != 200:
+            update_record(doc_id, status="failed", status_values={"message": f"HTTP {status}", "body": book})
+            raise RuntimeError("Non-Ok status returned by primo")
 
-    if len(book) == 1:
-        alt_context = primo.contexts[primo.contexts.index(context) - 1]
-        if alt_context not in attempted_contexts:
-            request_record.s(doc_id, alt_context, attempted_contexts=[*attempted_contexts, context]).apply_async()
-            return f"[{doc_id}, {context}] Attempting alt context"
-        else:
-            """ Prevent book from being resynced """
-            update_record(**{
-                "_id": doc_id,
-                "status": "failed",
-                "status_values": {
-                    "reason": "Unable to locate book",
-                    "contexts": attempted_contexts,
-                    "response": book
-                }
+        if len(book) == 1:
+            alt_context = primo.contexts[primo.contexts.index(context) - 1]
+            if alt_context not in attempted_contexts:
+                request_record.s(doc_id, alt_context, attempted_contexts=[*attempted_contexts, context]).apply_async()
+                return f"[{doc_id}, {context}] Attempting alt context"
+            else:
+                """ Prevent book from being resynced """
+                update_record(**{
+                    "_id": doc_id,
+                    "status": "failed",
+                    "status_values": {
+                        "reason": "Unable to locate book",
+                        "contexts": attempted_contexts,
+                        "response": book
+                    }
 
-            })
-        return f"[{doc_id}, {context}] Book not located"
-    print(f"[{doc_id}, {context}] Inserted Book")
-    book = transform(book)
-    return update_record(**book, status="processed", status_values={})
+                })
+            return f"[{doc_id}, {context}] Book not located"
+        print(f"[{doc_id}, {context}] Inserted Book")
+        book = transform(book)
+        return update_record(**book, status="processed", status_values={})
+    except:
+        update_record(doc_id, status="errored")
 
 
 @app.task()
@@ -128,7 +131,7 @@ def sync_books():
             },
             "task": {
                 "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
-                "retry_at": datetime.now() + timedelta(minutes=20),
+                "retry_at": datetime.now() + timedelta(hours=24),
             }
         }
         for view in views.aggregate(pipeline)

@@ -48,7 +48,7 @@ class MongoBase:
     @classmethod
     @receives_config("database")
     def get_util_collection(cls, config):
-        return cls._get_database().get_collection(config.mongodb.collections.utils)
+        return cls._get_database().get_collection(repr(config.mongodb.collections.utils))
 
     @classmethod
     def _with_collection(cls, name, fn):
