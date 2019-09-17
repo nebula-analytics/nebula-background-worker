@@ -8,6 +8,7 @@ notifications:
 
 install:
     - pip --version
+    - pip install pymongo
     - pip install -U sphinx
     - pip install travis-sphinx
 
