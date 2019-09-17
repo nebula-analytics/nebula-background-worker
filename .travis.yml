@@ -9,7 +9,7 @@ notifications:
 install:
     - pip --version
     - pip install -U sphinx
-    - pip install --user travis-sphinx
+    - pip install travis-sphinx
 
 script:
     - travis-sphinx build --branches documents
