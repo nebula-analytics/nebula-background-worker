@@ -13,7 +13,4 @@ script:
 - make html
 after_success:
 - cd ..
-- "./push.sh -u jeffphan8816 -p $GH_TOKEN"
-env:
-  global:
-    secure: Ts9oC0+/gbJqUbuEXW8suYs92ORe1MWzVUJ7aJpqKB5QgjW8/gzppIw0zfQNnRCIkoZImI0LLl9m52NSpduZGLAUAaaDuWXpZ1PuGTfiGchUzmeCTWrDMY7A3DrUwtnDHgUs7b0JI038lyzgQlWRkxrjCbmqCKEAXm/HtuuCpfph94BQSAKAIWkwMQrvRjOPwfrBHOQH8gIF7ymphLIFhZIY8eHEGbtolweE1zWuLexJgCNz4szdvFLx6o0odxAKcby0QlG9BdKssQxxpbiiGWNj+HAiCG/uD45VBmwlEkk9oZZKz2VV5mKtT07cDqtDsmUvJWMX060w8VrN4NmTnNlS72YbzoqEph+jKY1owz2dPBAgVtDqxBEwvVEWHF6VKr0v6ASllgshY/HXjvO2EbHLl/IA2Bbe/Smqa5qTYOpR3sMpJMXWAIfT06pzSVl6477ybhycZkD29DswbFCntT7+quxTtsFVvF1Wx2FDUtp8qU4qeMSJzFlyM76WcKNvJ591m5MijrbG5Tp6KGF6lDiUknefeFQpzu4TXV736jHKxtn7kv8pgwLPIbEfuDU17pceg1mxX/ZOrWOhIKKuHXowavhsywgK8UhmijHxzJYbqbhD9iyQKB1p/W/CU0ytQL4JeLvH4Dlj9JYk0mLXWqosLZhw+n3VfNl/3qzkfLE=
+- "./push.sh"
