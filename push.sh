@@ -4,6 +4,7 @@
 # Fill this out with the correct org/repo
 ORG=nebula-analytics
 REPO=nebula-background-worker
+USRNAME=jeffphan8816
 # This probably should match an email for one of your users.
 EMAIL=s3672747@student.rmit.edu.au
 
@@ -11,7 +12,7 @@ set -e
 
 # Clone the gh-pages branch outside of the repo and cd into it.
 cd ..
-git clone -b gh-pages "https://$GH_TOKEN@github.com/$ORG/$REPO.git" gh-pages
+git clone -b gh-pages "https://$USRNAME:$GH_TOKEN@github.com/$ORG/$REPO.git" gh-pages
 cd gh-pages
 
 # Update git configuration so I can push.
