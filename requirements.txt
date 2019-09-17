@@ -8,4 +8,3 @@ google-auth-oauthlib==0.3.0
 requests-oauthlib==1.2.0
 celery
 celery[redis]
-pandas
