@@ -1,5 +1,8 @@
-language: python - "3.7"
-sudo: required
+# Config file for automatic testing at travis-ci.org
+
+language: python
+python:
+  - 3.7
 # before_install will simply setup a conda enviroment for installing python packages, if you
 # have project dependencies it's usually recommended to go this route
 notifications:
