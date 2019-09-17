@@ -6,7 +6,6 @@ from typing import Iterable, Dict, Any, Union
 import yaml
 
 import utils
-from utils.Config import defaults
 
 module_path = os.path.sep.join(inspect.getabsfile(utils).split(os.path.sep)[:-2])
 
@@ -30,18 +29,18 @@ class ConfigMap:
         return cls.__singleton__
 
     @classmethod
-    def load(cls, path: str) -> 'ConfigMap':
+    def load(cls, *paths: str) -> 'ConfigMap':
         """
             Load the yaml config and create a ConfigMap
             Args:
-                path (str) : path to config.yaml file
+                paths (str) : Any number of arguments, paths take priority based on order, with index(0) being highest
             Returns:
                 A config map object
         """
-        config = ChainMap(defaults)
+        config = ChainMap({})
         for path in reversed(paths):
             if os.path.isfile(path):
-        with open(path, "r") as config_f:
+                with open(path, "r") as config_f:
                     config = config.new_child(yaml.safe_load(config_f))
         return cls(config)
 
@@ -105,8 +104,6 @@ class ConfigMap:
             ie: for key in config:
             Notes:
                 This method will not support additional environment keys
-            Args:
-                item (str): The key to look up
             Returns:
 
         """
