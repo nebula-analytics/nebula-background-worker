@@ -43,7 +43,7 @@ def get_book(doc_id: str, context: str, primo: ConfigMap):
         'accept': "application/json"
     }
 
-    response = requests.get(url, data=payload, headers=headers, params=querystring)
+    response = requests.get(url, data=payload, headers=headers, params=querystring, verify=False)
 
     return response.json(), response.status_code
 

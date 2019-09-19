@@ -56,11 +56,11 @@ def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional
 
                 })
             return f"[{doc_id}, {context}] Book not located"
-        print(f"[{doc_id}, {context}] Inserted Book")
         book = transform(book)
+        print(f"[{doc_id}, {context}] Inserted Book")
         return update_record(**book, status="processed", status_values={})
-    except:
-        update_record(doc_id, status="errored")
+    except Exception as e:
+        update_record(doc_id, status="errored", status_values={"message": str(e)})
 
 
 @app.task()

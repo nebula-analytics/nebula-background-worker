@@ -23,7 +23,6 @@ PyYAML==5.1.2
 redis==3.3.8
 requests==2.22.0
 requests-oauthlib==1.2.0
-celery
 celery[redis]
 pandas
 rsa==4.0

@@ -4,27 +4,25 @@ services:
     image: mongo
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: &db_user root
+      MONGO_INITDB_ROOT_PASSWORD: &db_pass example
 
   message_queue:
     image: rabbitmq:3.7-alpine
     restart: always
-    hostname: "nebula.mq"
     ports:
       - 6379:6379
   node_1:
     build: "."
     command:  "python -m celery -A schedule worker --loglevel=DEBUG -Q nebula.express,nebula.import -n node_1"
-    environment: &celery_env
-      nebula.database.mongodb.host: "mongo"
-      nebula.database.mongodb.username: "root"
-      nebula.database.mongodb.password: "example"
+    environment: &worker_env
+      nebula.database.mongodb.username: *db_user
+      nebula.database.mongodb.password: *db_pass
+      nebula.database.mongodb.host: "mongo:27017"
+      nebula.celery.broker_url:  "amqp://message_queue"
+      nebula.analytics.path_to_credentials: "/creds/analytics.pickle"
 
-      nebula.celery.broker_url: "amqp://message_queue"
-      nebula.celery.result_backend: "amqp://message_queue"
-
-    depends_on: &celery_deps
+    depends_on: &worker_dep
       - mongo
       - message_queue
 
@@ -33,17 +31,21 @@ services:
     build: "."
     command:  "python -m celery -A schedule worker --loglevel=DEBUG -Q nebula.express, -n node_2"
     depends_on:
-      *celery_deps
+      *worker_dep
     environment:
-      *celery_env
+      *worker_env
 
   node_scheduler:
     build: "."
-    command: "celery beat -A schedule --loglevel=INFO"
+    command: "celery beat -A schedule --loglevel=DEBUG"
     depends_on:
-      *celery_deps
+      - node_1
+      - node_2
+      - mongo
+      - message_queue
+
     environment:
-      *celery_env
+      *worker_env
 
   mongo-express:
     image: mongo-express
