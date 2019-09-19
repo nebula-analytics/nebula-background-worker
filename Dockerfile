@@ -3,8 +3,10 @@ WORKDIR /
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
-VOLUME "/creds"
-COPY ./token.secret /creds/analytics.pickle
+COPY ./token.secret /config/analytics.pickle
+ENV nebula.analytics.path_to_credentials="/creds/analytics.pickle"
 
 COPY . /app
 WORKDIR /app
+
+CMD python -m celery worker -B -A schedule --loglevel=debug -Q nebula.import,nebula.express -n node_1_test
