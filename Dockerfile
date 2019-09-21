@@ -4,7 +4,6 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
 COPY ./token.secret /config/analytics.pickle
-ENV nebula.analytics.path_to_credentials="/creds/analytics.pickle"
 
 COPY . /app
 WORKDIR /app

@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from math import floor
 from typing import Optional, Union
+import traceback 
 
 from celery import Celery
 
@@ -60,6 +61,7 @@ def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional
         print(f"[{doc_id}, {context}] Inserted Book")
         return update_record(**book, status="processed", status_values={})
     except Exception as e:
+        traceback.print_exc(e)
         update_record(doc_id, status="errored", status_values={"message": str(e)})
 
 
