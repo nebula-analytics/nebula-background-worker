@@ -1,12 +1,12 @@
-from datetime import datetime, timedelta
 from math import floor
-from typing import Optional, Union
-import traceback 
 
-from celery import Celery
-
+import traceback
 from Analytics.PageView import PageView
 from Analytics.helpers import generate_view_rows
+from celery import Celery
+from datetime import datetime, timedelta
+from typing import Optional, Union
+
 from Primo import *
 from Primo.transform import transform
 from utils import receives_config
@@ -111,6 +111,8 @@ def sync_books():
                 "foreignField": "doc_id",
                 "as": "matched_docs"
             }
+        }, {
+            "$unwind": "$matched_docs"
         },
         {
             "$match": {
@@ -121,6 +123,10 @@ def sync_books():
                         {"matched_docs.status": {"$not": {"$in": ["failed", "processed"]}}}
                     ]}
                 ]}
+        }, {
+            "$project": {
+                "_id": "$_id",
+            }
         }
     ]
 
@@ -132,7 +138,6 @@ def sync_books():
                 "record": view,
             },
             "task": {
-                "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
                 "retry_at": datetime.now() + timedelta(days=1),
             }
         }
