@@ -1,7 +1,6 @@
 import requests
 from pymongo.collection import Collection
 
-from Primo.transform import transform
 from utils import receives_config, ConfigMap
 from utils.MongoBase import MongoBase
 
@@ -63,5 +62,6 @@ def update_record(doc_id: str, **record):
         "doc_id": doc_id
     }, {
         "$set": record
-    })
+    },
+        upsert=True)
     return result.upserted_id

@@ -1,12 +1,13 @@
-from math import floor
-
 import traceback
-from Analytics.PageView import PageView
-from Analytics.helpers import generate_view_rows
-from celery import Celery
 from datetime import datetime, timedelta
+from math import floor
 from typing import Optional, Union
 
+import pymongo
+from celery import Celery
+
+from Analytics.PageView import PageView
+from Analytics.helpers import generate_view_rows
 from Primo import *
 from Primo.transform import transform
 from utils import receives_config
@@ -15,8 +16,11 @@ app = Celery("schedule")
 
 receives_config("celery", as_json=True)(app.config_from_object)()
 
-
-# MongoBase.get_book_collection().create_index([("doc_id", pymongo.TEXT)], unique=True)
+MongoBase.get_book_collection().create_index([("doc_id", pymongo.ASCENDING)], unique=True, default_language="en", language_override="en", )
+MongoBase.get_view_collection().create_index(
+    [("doc_id", pymongo.ASCENDING), ("context", pymongo.ASCENDING), ("city", pymongo.ASCENDING), ("country", pymongo.ASCENDING),
+     ('at', pymongo.ASCENDING)],
+    unique=True, default_language="en", language_override="en")
 
 
 @app.task
@@ -103,29 +107,62 @@ def sync_books():
 
     pipeline = [
         {
-            "$group": {"_id": "$doc_id", "context": {"$first": "$context"}}
-        }, {
-            "$lookup": {
-                "from": collections.books,
-                "localField": "_id",
-                "foreignField": "doc_id",
-                "as": "matched_docs"
+            '$group': {
+                '_id': '$doc_id',
+                'context': {
+                    '$first': '$context'
+                }
             }
         }, {
-            "$unwind": "$matched_docs"
-        },
-        {
-            "$match": {
-                "$or": [
-                    {"matched_docs": {"$eq": []}},
-                    {"$and": [
-                        {"matched_docs.task.retry_at": {"$lte": datetime.now()}},
-                        {"matched_docs.status": {"$not": {"$in": ["failed", "processed"]}}}
-                    ]}
-                ]}
+            '$lookup': {
+                'from': collections.books,
+                'as': 'match_docs',
+                'let': {
+                    'indicator_id': '$_id'
+                },
+                'pipeline': [
+                    {
+                        '$match': {
+                            '$expr': {
+                                '$eq': [
+                                    '$doc_id', '$$indicator_id'
+                                ]
+                            }
+                        }
+                    }, {
+                        '$project': {
+                            'retry_at': '$task.retry_at',
+                            'status': '$status'
+                        }
+                    }
+                ]
+            }
         }, {
-            "$project": {
-                "_id": "$_id",
+            '$match': {
+                '$or': [
+                    {
+                        'match_docs': {
+                            '$eq': []
+                        }
+                    }, {
+                        '$and': [
+                            {
+                                "match_docs.retry_at": {
+                                    "$lte": datetime.now()
+                                }
+                            },
+                            {
+                                'match_docs.status': {
+                                    '$not': {
+                                        '$in': [
+                                            'failed', 'processed'
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         }
     ]
@@ -138,6 +175,7 @@ def sync_books():
                 "record": view,
             },
             "task": {
+                "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
                 "retry_at": datetime.now() + timedelta(days=1),
             }
         }
