@@ -167,23 +167,30 @@ def sync_books():
         }
     ]
 
-    queue = list(
+    operations = list(
         {
-            "doc_id": view["_id"],
-            "status": "queued",
-            "status_values": {
-                "record": view,
-            },
-            "task": {
-                "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
-                "retry_at": datetime.now() + timedelta(days=1),
+            "updateOne": {
+                "filter": {"doc_id": view["_id"]},
+                "update": {"$set": {
+                    "status": "queued",
+                    "status_values": {
+                        "record": view,
+                    },
+                    "task": {
+                        "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
+                        "retry_at": datetime.now() + timedelta(days=1),
+                        "attempts": 1
+                    }
+                }},
+                "upsert": True
             }
         }
         for view in views.aggregate(pipeline)
     )
-    print(f"[Sync Books] {len(queue)} books in diff")
-    if queue:
-        books.insert_many(queue)
+
+    if operations:
+        books.bulk_write(operations, False)
+    print(f"[Sync Books] {len(operations)} books in diff")
 
 
 @app.task
