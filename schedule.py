@@ -17,10 +17,7 @@ app = Celery("schedule")
 receives_config("celery", as_json=True)(app.config_from_object)()
 
 MongoBase.get_book_collection().create_index([("doc_id", pymongo.ASCENDING)], unique=True, default_language="en", language_override="en", )
-MongoBase.get_view_collection().create_index(
-    [("doc_id", pymongo.ASCENDING), ("context", pymongo.ASCENDING), ("city", pymongo.ASCENDING), ("country", pymongo.ASCENDING),
-     ('at', pymongo.ASCENDING)],
-    unique=True, default_language="en", language_override="en")
+MongoBase.get_view_collection().create_index([("doc_id", pymongo.ASCENDING)], default_language="en", language_override="en")
 
 
 @app.task
@@ -168,29 +165,28 @@ def sync_books():
     ]
 
     operations = list(
-        {
-            "updateOne": {
-                "filter": {"doc_id": view["_id"]},
-                "update": {"$set": {
-                    "status": "queued",
-                    "status_values": {
-                        "record": view,
-                    },
-                    "task": {
-                        "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
-                        "retry_at": datetime.now() + timedelta(days=1),
-                        "attempts": 1
-                    }
-                }},
-                "upsert": True
-            }
-        }
+        pymongo.UpdateOne(
+            {"doc_id": view["_id"]},
+            {"$set": {
+                "status": "queued",
+                "status_values": {
+                    "record": view,
+                },
+                "task": {
+                    "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
+                    "retry_at": datetime.now() + timedelta(days=1),
+                    "attempts": 1
+                }
+            }},
+            upsert=True
+        )
         for view in views.aggregate(pipeline)
     )
+    print(f"[Sync Books] {len(operations)} books in diff")
 
     if operations:
-        books.bulk_write(operations, False)
-    print(f"[Sync Books] {len(operations)} books in diff")
+        result = books.bulk_write(operations, False)
+        print(f"[Sync Books] {len(operations)} batched to database; {result.upserted_count} created, {result.acknowledged} acknowledged")
 
 
 @app.task
