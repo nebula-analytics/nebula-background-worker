@@ -1,7 +1,9 @@
+import traceback
 from datetime import datetime, timedelta
 from math import floor
 from typing import Optional, Union
 
+import pymongo
 from celery import Celery
 
 from Analytics.PageView import PageView
@@ -14,8 +16,8 @@ app = Celery("schedule")
 
 receives_config("celery", as_json=True)(app.config_from_object)()
 
-
-# MongoBase.get_book_collection().create_index([("doc_id", pymongo.TEXT)], unique=True)
+MongoBase.get_book_collection().create_index([("doc_id", pymongo.ASCENDING)], unique=True, default_language="en", language_override="en", )
+MongoBase.get_view_collection().create_index([("doc_id", pymongo.ASCENDING)], default_language="en", language_override="en")
 
 
 @app.task
@@ -28,36 +30,40 @@ def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional
     :param context: The primo context, L or PC
     :return: The primo response
     """
-    primo = ConfigMap.get_singleton().primo
-    update_record(doc_id, status="processing")
+    try:
+        primo = ConfigMap.get_singleton().primo
+        update_record(doc_id, status="processing")
 
-    book, status = get_book(doc_id, context)
+        book, status = get_book(doc_id, context)
 
-    if status != 200:
-        update_record(doc_id, status="failed", status_values={"message": f"HTTP {status}", "body": book})
-        raise RuntimeError("Non-Ok status returned by primo")
+        if status != 200:
+            update_record(doc_id, status="failed", status_values={"message": f"HTTP {status}", "body": book})
+            raise RuntimeError("Non-Ok status returned by primo")
 
-    if len(book) == 1:
-        alt_context = primo.contexts[primo.contexts.index(context) - 1]
-        if alt_context not in attempted_contexts:
-            request_record.s(doc_id, alt_context, attempted_contexts=[*attempted_contexts, context]).apply_async()
-            return f"[{doc_id}, {context}] Attempting alt context"
-        else:
-            """ Prevent book from being resynced """
-            update_record(**{
-                "_id": doc_id,
-                "status": "failed",
-                "status_values": {
-                    "reason": "Unable to locate book",
-                    "contexts": attempted_contexts,
-                    "response": book
-                }
+        if len(book) == 1:
+            alt_context = primo.contexts[primo.contexts.index(context) - 1]
+            if alt_context not in attempted_contexts:
+                request_record.s(doc_id, alt_context, attempted_contexts=[*attempted_contexts, context]).apply_async()
+                return f"[{doc_id}, {context}] Attempting alt context"
+            else:
+                """ Prevent book from being resynced """
+                update_record(**{
+                    "_id": doc_id,
+                    "status": "failed",
+                    "status_values": {
+                        "reason": "Unable to locate book",
+                        "contexts": attempted_contexts,
+                        "response": book
+                    }
 
-            })
-        return f"[{doc_id}, {context}] Book not located"
-    print(f"[{doc_id}, {context}] Inserted Book")
-    book = transform(book)
-    return update_record(**book, status="processed", status_values={})
+                })
+            return f"[{doc_id}, {context}] Book not located"
+        book = transform(book)
+        print(f"[{doc_id}, {context}] Inserted Book")
+        return update_record(**book, status="processed", status_values={})
+    except Exception as e:
+        traceback.print_exc(e)
+        update_record(doc_id, status="errored", status_values={"message": str(e)})
 
 
 @app.task()
@@ -98,44 +104,89 @@ def sync_books():
 
     pipeline = [
         {
-            "$group": {"_id": "$doc_id", "context": {"$first": "$context"}}
-        }, {
-            "$lookup": {
-                "from": collections.books,
-                "localField": "_id",
-                "foreignField": "doc_id",
-                "as": "matched_docs"
+            '$group': {
+                '_id': '$doc_id',
+                'context': {
+                    '$first': '$context'
+                }
             }
-        },
-        {
-            "$match": {
-                "$or": [
-                    {"matched_docs": {"$eq": []}},
-                    {"$and": [
-                        {"matched_docs.task.retry_at": {"$lte": datetime.now()}},
-                        {"matched_docs.status": {"$not": {"$in": ["failed", "processed"]}}}
-                    ]}
-                ]}
+        }, {
+            '$lookup': {
+                'from': collections.books,
+                'as': 'match_docs',
+                'let': {
+                    'indicator_id': '$_id'
+                },
+                'pipeline': [
+                    {
+                        '$match': {
+                            '$expr': {
+                                '$eq': [
+                                    '$doc_id', '$$indicator_id'
+                                ]
+                            }
+                        }
+                    }, {
+                        '$project': {
+                            'retry_at': '$task.retry_at',
+                            'status': '$status'
+                        }
+                    }
+                ]
+            }
+        }, {
+            '$match': {
+                '$or': [
+                    {
+                        'match_docs': {
+                            '$eq': []
+                        }
+                    }, {
+                        '$and': [
+                            {
+                                "match_docs.retry_at": {
+                                    "$lte": datetime.now()
+                                }
+                            },
+                            {
+                                'match_docs.status': {
+                                    '$not': {
+                                        '$in': [
+                                            'failed', 'processed'
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
         }
     ]
 
-    queue = list(
-        {
-            "doc_id": view["_id"],
-            "status": "queued",
-            "status_values": {
-                "record": view,
-            },
-            "task": {
-                "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
-                "retry_at": datetime.now() + timedelta(days=1),
-            }
-        }
+    operations = list(
+        pymongo.UpdateOne(
+            {"doc_id": view["_id"]},
+            {"$set": {
+                "status": "queued",
+                "status_values": {
+                    "record": view,
+                },
+                "task": {
+                    "task_id": request_record.s(view["_id"], view["context"]).apply_async().id,
+                    "retry_at": datetime.now() + timedelta(days=1),
+                    "attempts": 1
+                }
+            }},
+            upsert=True
+        )
         for view in views.aggregate(pipeline)
     )
-    print(f"[Sync Books] {len(queue)} books in diff")
-    if queue:
-        books.insert_many(queue)
+    print(f"[Sync Books] {len(operations)} books in diff")
+
+    if operations:
+        result = books.bulk_write(operations, False)
+        print(f"[Sync Books] {len(operations)} batched to database; {result.upserted_count} created, {result.acknowledged} acknowledged")
 
 
 @app.task

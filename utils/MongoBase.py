@@ -85,7 +85,7 @@ class MongoBase:
             Returns:
                 Collection of utils in database
         """
-        return cls._get_database().get_collection(repr(config.mongodb.collections.utils))
+        return cls._get_database().get_collection(config.mongodb.collections.utils)
 
     @classmethod
     def _with_collection(cls, name, fn):
