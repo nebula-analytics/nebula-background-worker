@@ -94,12 +94,20 @@ class PageView:
     @staticmethod
     def get_since(time: datetime):
         views = MongoBase.get_view_collection()
-        views.find(
+        return views.find(
             {"at": {"$lte": time}}
         )
 
     def __hash__(self):
-        return f"{self.doc_id}_{self.city}_{self.country}_{self.count}"
+        return hash(f"{self.doc_id}_{self.city}_{self.country}_{self.count}")
 
     def __eq__(self, other):
-        return hash(self) == hash(other)
+        matching_keys = ["doc_id", "context", "city", "country", "count"]
+        rep = self.mongo_representation
+        if isinstance(other, dict):
+            return all(
+                rep.get(key) == other.get(key, None)
+                for key in matching_keys
+            )
+        else:
+            return hash(self) == hash(other)

@@ -88,14 +88,15 @@ def sync_views():
     views = list(PageView(*row) for row in rows)
 
     if minutes_ago is not None:
-        prev_results = PageView.get_since(last_query["time"])
+        prev_results = PageView.get_since(last_query["time"] + timedelta(minutes=1))
         """ Strip previous results """
-        for i in reversed(range(len(views))):
-            view = views[i]
-            if view in prev_results:
-                views.pop(i)
-            else:
-                break
+        if prev_results:
+            for i in reversed(range(len(views))):
+                view = views[i]
+                if view in prev_results:
+                    views.pop(i)
+                else:
+                    break
 
     print(f"[Sync Views] {len(views)} new views received from analytics")
     if views:
