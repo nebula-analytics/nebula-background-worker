@@ -85,7 +85,29 @@ class PageView:
                     {"doc_id": {"$eq": self.doc_id}},
                     {"city": {"$eq": self.city}},
                     {"country": {"$eq": self.country}},
+                    {"count": {"$eq": self.count}},
                     {"at": {"$lt": self.when + timedelta(minutes=1)}},
                 ]
             }
         }])))
+
+    @staticmethod
+    def get_since(time: datetime):
+        views = MongoBase.get_view_collection()
+        return views.find(
+            {"at": {"$lte": time}}
+        )
+
+    def __hash__(self):
+        return hash(f"{self.doc_id}_{self.city}_{self.country}_{self.count}")
+
+    def __eq__(self, other):
+        matching_keys = ["doc_id", "context", "city", "country", "count"]
+        rep = self.mongo_representation
+        if isinstance(other, dict):
+            return all(
+                rep.get(key) == other.get(key, None)
+                for key in matching_keys
+            )
+        else:
+            return hash(self) == hash(other)

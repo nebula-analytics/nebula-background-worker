@@ -69,9 +69,10 @@ def request_record(doc_id: str, context: str, attempted_contexts=()) -> Optional
 @app.task()
 def sync_views():
     utils = MongoBase.get_util_collection()
-
     last_query = utils.find_one("last_analytics_sync")
+
     minutes_ago = None
+
     if last_query:
         minutes_ago = floor((datetime.now() - last_query["time"]).total_seconds() / 60)
         utils.update_one({"_id": "last_analytics_sync"}, {
@@ -82,9 +83,20 @@ def sync_views():
             "_id": "last_analytics_sync",
             "time": datetime.now()
         })
+
     rows = generate_view_rows(minutes_ago)
     views = list(PageView(*row) for row in rows)
-    views = list(view for view in views if not view.exists())
+
+    if minutes_ago is not None:
+        prev_results = PageView.get_since(last_query["time"] + timedelta(minutes=1))
+        """ Strip previous results """
+        if prev_results:
+            for i in reversed(range(len(views))):
+                view = views[i]
+                if view in prev_results:
+                    views.pop(i)
+                else:
+                    break
 
     print(f"[Sync Views] {len(views)} new views received from analytics")
     if views:
