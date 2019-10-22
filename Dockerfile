@@ -1,7 +1,13 @@
 FROM python:latest
+
+RUN groupadd -g 999 appuser && \
+    useradd -r -u 999 -g appuser appuser
+
 WORKDIR /
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
+
+USER appuser
 
 COPY ./token.secret /config/analytics.pickle
 
