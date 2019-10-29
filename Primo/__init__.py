@@ -1,7 +1,6 @@
 import requests
 from pymongo.collection import Collection
 
-from Primo.transform import transform
 from utils import receives_config, ConfigMap
 from utils.MongoBase import MongoBase
 
@@ -49,7 +48,7 @@ def get_book(doc_id: str, context: str, primo: ConfigMap):
     return response.json(), response.status_code
 
 
-def update_record(_id: str, **record):
+def update_record(doc_id: str, **record):
     """
         Update record of books collection in MongoDB.
 
@@ -62,8 +61,9 @@ def update_record(_id: str, **record):
     """
     books = MongoBase.get_book_collection()
     result = books.update_one({
-        "doc_id": _id
+        "doc_id": doc_id
     }, {
         "$set": record
-    })
+    },
+        upsert=True)
     return result.upserted_id
