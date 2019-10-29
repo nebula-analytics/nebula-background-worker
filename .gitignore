@@ -5,4 +5,4 @@ venv
 *.pyc
 *.secret
 celerybeat-schedule
-docs
+docs/_build
