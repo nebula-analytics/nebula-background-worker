@@ -25,7 +25,8 @@ fi
 cp -R ../$REPO/docs/_build/html/* ./
 
 # Add and commit changes.
-git commit -a -m "[CI Bot] Update documentation to commit #$COMMIT."
+git add -A .
+git commit -m "[ci skip] Autodoc commit for $COMMIT."
 if [ "$1" != "dry" ]; then
     # -q is very important, otherwise you leak your GH_TOKEN
     git push -q origin gh-pages
