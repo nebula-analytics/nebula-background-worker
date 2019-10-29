@@ -25,7 +25,10 @@ fi
 cp -R ../$REPO/docs/_build/html/* ./
 
 echo "" >  ./.nojekyll
+
+
 # Add and commit changes.
+git add -A .
 git commit -a -m "[CI Bot] Update documentation to commit #$COMMIT."
 if [ "$1" != "dry" ]; then
     # -q is very important, otherwise you leak your GH_TOKEN
