@@ -1,5 +1,19 @@
-analytics.pickle
+# Documentation  Files
 Readme.md
 LICENSE
-celerybeat*
+
+# Python files
 venv
+*.pyc
+
+# Celery runtime files
+celerybeat*
+
+# Authentication files
+analytics.pickle
+
+# CI tools
+docs
+push.sh
+travis.yml
+.nojekyll

@@ -5,4 +5,15 @@ venv
 *.pyc
 *.secret
 celerybeat-schedule
+
+# sphinx build folder
 docs/_build
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
