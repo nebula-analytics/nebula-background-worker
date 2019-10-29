@@ -24,6 +24,7 @@ fi
 # Copy in the HTML.  You may want to change this with your documentation path.
 cp -R ../$REPO/docs/_build/html/* ./
 
+echo "" >  ./.nojekyll
 # Add and commit changes.
 git commit -a -m "[CI Bot] Update documentation to commit #$COMMIT."
 if [ "$1" != "dry" ]; then
