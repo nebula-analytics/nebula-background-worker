@@ -1,7 +1,9 @@
 Project Nebula Analytics / Background Worker
 ========
-[![start with why](https://img.shields.io/badge/docs-master-brightgreen.svg?style=flat)](https://nebula-analytics.github.io/nebula-background-worker)
 [![Documentation Build Status](https://travis-ci.com/nebula-analytics/nebula-background-worker.svg?branch=master)](https://travis-ci.com/nebula-analytics/nebula-background-worker)
+[![Link to documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://nebula-analytics.github.io/nebula-background-worker)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+[![Docker link](https://img.shields.io/badge/docker-manual-brightgreen.svg?style=flat)](https://nebula-analytics.github.io/nebula-background-worker)
 
 The background worker is responsible for keeping the mongo database up to date with information from Primo and Google Analytics
 
