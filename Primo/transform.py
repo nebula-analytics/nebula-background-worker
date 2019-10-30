@@ -43,8 +43,8 @@ def transform(input_data: dict, primo: ConfigMap) -> dict:
         if key in primo.excluded_fields:
             continue
         output_data[key] = value
-
-    output_data["_id"] = output_data.pop(primo.key_by)
+    if primo.key_by:
+    	output_data["_id"] = output_data.pop(primo.key_by)
 
     common_fields = list(primo.name_mapping.get(key, key) for key in primo.common_fields)
 
