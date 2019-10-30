@@ -4,4 +4,4 @@ venv
 *.pickle
 *.pyc
 *.secret
-celerybeat-schedule
+celerybeat*
