@@ -14,13 +14,13 @@ from utils import receives_config
 
 app = Celery("schedule")
 
-if __name__ == "__main__":
-    receives_config("celery", as_json=True)(app.config_from_object)()
 
-    MongoBase.get_book_collection().create_index([("doc_id", pymongo.ASCENDING)], unique=True, default_language="en",
-                                                 language_override="en", )
-    MongoBase.get_view_collection().create_index([("doc_id", pymongo.ASCENDING)], default_language="en",
-                                                 language_override="en")
+receives_config("celery", as_json=True)(app.config_from_object)()
+
+MongoBase.get_book_collection().create_index([("doc_id", pymongo.ASCENDING)], unique=True, default_language="en",
+                                             language_override="en", )
+MongoBase.get_view_collection().create_index([("doc_id", pymongo.ASCENDING)], default_language="en",
+                                             language_override="en")
 
 
 @app.task
