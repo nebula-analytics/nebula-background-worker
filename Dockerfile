@@ -3,7 +3,7 @@ WORKDIR /
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
-COPY ./token.secret /config/analytics.pickle
+VOLUME ./analytics.pickle /config/
 
 COPY . /app
 WORKDIR /app

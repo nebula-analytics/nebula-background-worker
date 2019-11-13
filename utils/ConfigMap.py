@@ -1,7 +1,7 @@
 import inspect
 import os
 from collections import ChainMap
-from typing import Iterable, Dict, Any, Union
+from typing import Iterable, Any, Union
 
 import yaml
 
@@ -44,7 +44,7 @@ class ConfigMap:
                     config = config.new_child(yaml.safe_load(config_f))
         return cls(config)
 
-    def __init__(self, values: Dict[str, Any], key: str = "nebula", parents: Iterable = ()):
+    def __init__(self, values: ChainMap, key: str = "nebula", parents: Iterable = ()):
         """
             Set up the mapper
             Args:
@@ -123,7 +123,12 @@ class ConfigMap:
                 value = yaml.safe_load(value)
         else:
             value = self.__values__.get(item, default)
+
         if isinstance(value, dict):
+            value = ChainMap(*list(
+                parent.get(item, default) for parent in self.__values__.maps
+                if isinstance(parent.get(item, default), dict)
+            ))
             value = ConfigMap(value, key=item, parents=self.__parents__)
             if json_response:
                 value = value.dict
