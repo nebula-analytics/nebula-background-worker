@@ -25,7 +25,6 @@ redis==3.3.8
 requests==2.22.0
 requests-oauthlib==1.2.0
 celery[redis]
-pandas
 rsa==4.0
 six==1.12.0
 uritemplate==3.0.0

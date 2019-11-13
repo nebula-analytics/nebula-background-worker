@@ -71,7 +71,6 @@ class ConfigMap:
                 item (str): The key to look up
             Returns:
                 ConfigMap object ie: config.primo
-
         """
         return self.get(item)
 
@@ -82,7 +81,6 @@ class ConfigMap:
                 item (str): The key to look up
             Returns:
                 ConfigMap object ie: config.primo
-
         """
         return self.get(item)
 
@@ -105,7 +103,6 @@ class ConfigMap:
             Notes:
                 This method will not support additional environment keys
             Returns:
-
         """
         return iter(self.__values__)
 
@@ -118,7 +115,6 @@ class ConfigMap:
                 json_response: If true, this will return a json-compatible response
             Returns:
                 A config dictionary or value
-
         """
         environ_key = f"{self.__path__}.{item}"
         if environ_key in os.environ:

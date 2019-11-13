@@ -1,0 +1,16 @@
+language: python
+python:
+- 3.7
+notifications:
+  email: false
+install:
+- pip --version
+- pip install -r requirements.txt
+- pip install -U sphinx
+script:
+- cd docs
+- sphinx-apidoc -o . .. -f
+- make html
+after_success:
+- cd ..
+- "./push.sh"

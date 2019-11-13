@@ -4,4 +4,18 @@ venv
 *.pickle
 *.pyc
 *.secret
+
+# sphinx build folder
+docs/_build
+
+# Compiled source #
+
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
 celerybeat*
+
