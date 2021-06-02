@@ -4,11 +4,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Primo package &#8212; nebula  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/haiku.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -35,16 +36,16 @@
       <div class="content" role="main">
         
         
-  <div class="section" id="primo-package">
+  <section id="primo-package">
 <h1>Primo package<a class="headerlink" href="#primo-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
+<section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-Primo.transform">
+</section>
+<section id="module-Primo.transform">
 <span id="primo-transform-module"></span><h2>Primo.transform module<a class="headerlink" href="#module-Primo.transform" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="Primo.transform.convert_field_names">
-<code class="sig-prename descclassname"><span class="pre">Primo.transform.</span></code><code class="sig-name descname"><span class="pre">convert_field_names</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primo</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="utils.html#utils.ConfigMap.ConfigMap" title="utils.ConfigMap.ConfigMap"><span class="pre">utils.ConfigMap.ConfigMap</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Primo.transform.convert_field_names" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="Primo.transform.convert_field_names">
+<span class="sig-prename descclassname"><span class="pre">Primo.transform.</span></span><span class="sig-name descname"><span class="pre">convert_field_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primo</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="utils.html#utils.ConfigMap.ConfigMap" title="utils.ConfigMap.ConfigMap"><span class="pre">utils.ConfigMap.ConfigMap</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Primo.transform.convert_field_names" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – field name from json record in database</p>
@@ -55,17 +56,17 @@ Returns:</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="Primo.transform.excluded_fields">
-<code class="sig-prename descclassname"><span class="pre">Primo.transform.</span></code><code class="sig-name descname"><span class="pre">excluded_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['_id']</span></em><a class="headerlink" href="#Primo.transform.excluded_fields" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="Primo.transform.excluded_fields">
+<span class="sig-prename descclassname"><span class="pre">Primo.transform.</span></span><span class="sig-name descname"><span class="pre">excluded_fields</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['_id']</span></em><a class="headerlink" href="#Primo.transform.excluded_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map core fields to other names</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-Primo">
+</section>
+<section id="module-Primo">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Primo" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="Primo.update_record">
-<code class="sig-prename descclassname"><span class="pre">Primo.</span></code><code class="sig-name descname"><span class="pre">update_record</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Primo.update_record" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="Primo.update_record">
+<span class="sig-prename descclassname"><span class="pre">Primo.</span></span><span class="sig-name descname"><span class="pre">update_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Primo.update_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update record of books collection in MongoDB.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -79,8 +80,8 @@ Returns:</p>
 :returns: The _id of the inserted document if an upsert took place. Otherwise <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
       </div>
@@ -98,7 +99,7 @@ Returns:</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, jeff.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
     </div>
   </body>
 </html>

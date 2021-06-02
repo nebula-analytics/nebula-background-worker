@@ -4,11 +4,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>utils package &#8212; nebula  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/haiku.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -32,20 +33,20 @@
       <div class="content" role="main">
         
         
-  <div class="section" id="utils-package">
+  <section id="utils-package">
 <h1>utils package<a class="headerlink" href="#utils-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
+<section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-utils.ConfigMap">
+</section>
+<section id="module-utils.ConfigMap">
 <span id="utils-configmap-module"></span><h2>utils.ConfigMap module<a class="headerlink" href="#module-utils.ConfigMap" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="utils.ConfigMap.ConfigMap">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">utils.ConfigMap.</span></code><code class="sig-name descname"><span class="pre">ConfigMap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">collections.ChainMap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'nebula'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.ConfigMap.ConfigMap" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.ConfigMap.ConfigMap">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">utils.ConfigMap.</span></span><span class="sig-name descname"><span class="pre">ConfigMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">collections.ChainMap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'nebula'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.ConfigMap.ConfigMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt id="utils.ConfigMap.ConfigMap.dict">
-<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">dict</span></code><a class="headerlink" href="#utils.ConfigMap.ConfigMap.dict" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="utils.ConfigMap.ConfigMap.dict">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dict</span></span><a class="headerlink" href="#utils.ConfigMap.ConfigMap.dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert this object to a dictionary
 .. rubric:: Notes</p>
 <p>This method will not support additional environment keys</p>
@@ -57,8 +58,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="utils.ConfigMap.ConfigMap.get">
-<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#utils.ConfigMap.ConfigMap" title="utils.ConfigMap.ConfigMap"><span class="pre">utils.ConfigMap.ConfigMap</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#utils.ConfigMap.ConfigMap.get" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.ConfigMap.ConfigMap.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#utils.ConfigMap.ConfigMap" title="utils.ConfigMap.ConfigMap"><span class="pre">utils.ConfigMap.ConfigMap</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#utils.ConfigMap.ConfigMap.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a config variable from the configuration file or environment
 :param item: The key to look up
 :type item: str
@@ -72,13 +73,13 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="utils.ConfigMap.ConfigMap.get_singleton">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_singleton</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.ConfigMap.ConfigMap.get_singleton" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.ConfigMap.ConfigMap.get_singleton">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">get_singleton</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.ConfigMap.ConfigMap.get_singleton" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="utils.ConfigMap.ConfigMap.load">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">load</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">paths</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#utils.ConfigMap.ConfigMap" title="utils.ConfigMap.ConfigMap"><span class="pre">utils.ConfigMap.ConfigMap</span></a><a class="headerlink" href="#utils.ConfigMap.ConfigMap.load" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.ConfigMap.ConfigMap.load">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">paths</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#utils.ConfigMap.ConfigMap" title="utils.ConfigMap.ConfigMap"><span class="pre">utils.ConfigMap.ConfigMap</span></a><a class="headerlink" href="#utils.ConfigMap.ConfigMap.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the yaml config and create a ConfigMap
 :param paths: Any number of arguments, paths take priority based on order, with index(0) being highest
 :type paths: str</p>
@@ -91,73 +92,73 @@
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-utils.MongoBase">
+</section>
+<section id="module-utils.MongoBase">
 <span id="utils-mongobase-module"></span><h2>utils.MongoBase module<a class="headerlink" href="#module-utils.MongoBase" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="utils.MongoBase.MongoBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">utils.MongoBase.</span></code><code class="sig-name descname"><span class="pre">MongoBase</span></code><a class="headerlink" href="#utils.MongoBase.MongoBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">utils.MongoBase.</span></span><span class="sig-name descname"><span class="pre">MongoBase</span></span><a class="headerlink" href="#utils.MongoBase.MongoBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
-<dt id="utils.MongoBase.MongoBase.get_book_collection">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_book_collection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.get_book_collection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase.get_book_collection">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">get_book_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.get_book_collection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="utils.MongoBase.MongoBase.get_util_collection">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_util_collection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.get_util_collection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase.get_util_collection">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">get_util_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.get_util_collection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="utils.MongoBase.MongoBase.get_view_collection">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_view_collection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.get_view_collection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase.get_view_collection">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">get_view_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.get_view_collection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="utils.MongoBase.MongoBase.json_convert_pipeline">
-<code class="sig-name descname"><span class="pre">json_convert_pipeline</span></code><em class="property"> <span class="pre">=</span> <span class="pre">[{'$group':</span> <span class="pre">{'_id':</span> <span class="pre">'$doc_id',</span> <span class="pre">'count':</span> <span class="pre">{'$sum':</span> <span class="pre">1},</span> <span class="pre">'last_viewed':</span> <span class="pre">{'$max':</span> <span class="pre">'$time'}}},</span> <span class="pre">{'$lookup':</span> <span class="pre">{'from':</span> <span class="pre">'books',</span> <span class="pre">'localField':</span> <span class="pre">'_id',</span> <span class="pre">'foreignField':</span> <span class="pre">'_id',</span> <span class="pre">'as':</span> <span class="pre">'matched'}},</span> <span class="pre">{'$unwind':</span> <span class="pre">'$matched'},</span> <span class="pre">{'$addFields':</span> <span class="pre">{'matched.count':</span> <span class="pre">'$count',</span> <span class="pre">'matched.last_view':</span> <span class="pre">'$last_viewed'}},</span> <span class="pre">{'$replaceRoot':</span> <span class="pre">{'newRoot':</span> <span class="pre">'$matched'}},</span> <span class="pre">{'$project':</span> <span class="pre">{'doc_id':</span> <span class="pre">'$id',</span> <span class="pre">'title':</span> <span class="pre">'$title',</span> <span class="pre">'identifiers':</span> <span class="pre">'$identifier',</span> <span class="pre">'language':</span> <span class="pre">'$lang3',</span> <span class="pre">'record_type':</span> <span class="pre">'$_type',</span> <span class="pre">'extra_fields':</span> <span class="pre">'$extra_fields',</span> <span class="pre">'count':</span> <span class="pre">'$count',</span> <span class="pre">'last_view':</span> <span class="pre">'$last_view'}}]</span></em><a class="headerlink" href="#utils.MongoBase.MongoBase.json_convert_pipeline" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase.json_convert_pipeline">
+<span class="sig-name descname"><span class="pre">json_convert_pipeline</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[{'$group':</span> <span class="pre">{'_id':</span> <span class="pre">'$doc_id',</span> <span class="pre">'count':</span> <span class="pre">{'$sum':</span> <span class="pre">1},</span> <span class="pre">'last_viewed':</span> <span class="pre">{'$max':</span> <span class="pre">'$time'}}},</span> <span class="pre">{'$lookup':</span> <span class="pre">{'from':</span> <span class="pre">'books',</span> <span class="pre">'localField':</span> <span class="pre">'_id',</span> <span class="pre">'foreignField':</span> <span class="pre">'_id',</span> <span class="pre">'as':</span> <span class="pre">'matched'}},</span> <span class="pre">{'$unwind':</span> <span class="pre">'$matched'},</span> <span class="pre">{'$addFields':</span> <span class="pre">{'matched.count':</span> <span class="pre">'$count',</span> <span class="pre">'matched.last_view':</span> <span class="pre">'$last_viewed'}},</span> <span class="pre">{'$replaceRoot':</span> <span class="pre">{'newRoot':</span> <span class="pre">'$matched'}},</span> <span class="pre">{'$project':</span> <span class="pre">{'doc_id':</span> <span class="pre">'$id',</span> <span class="pre">'title':</span> <span class="pre">'$title',</span> <span class="pre">'identifiers':</span> <span class="pre">'$identifier',</span> <span class="pre">'language':</span> <span class="pre">'$lang3',</span> <span class="pre">'record_type':</span> <span class="pre">'$_type',</span> <span class="pre">'extra_fields':</span> <span class="pre">'$extra_fields',</span> <span class="pre">'count':</span> <span class="pre">'$count',</span> <span class="pre">'last_view':</span> <span class="pre">'$last_view'}}]</span></em><a class="headerlink" href="#utils.MongoBase.MongoBase.json_convert_pipeline" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="utils.MongoBase.MongoBase.with_book_collection">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">with_book_collection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.with_book_collection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase.with_book_collection">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">with_book_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.with_book_collection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="utils.MongoBase.MongoBase.with_utils_collection">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">with_utils_collection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.with_utils_collection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase.with_utils_collection">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">with_utils_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.with_utils_collection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="utils.MongoBase.MongoBase.with_view_collection">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">with_view_collection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.with_view_collection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.MongoBase.MongoBase.with_view_collection">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">with_view_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.MongoBase.MongoBase.with_view_collection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-utils.argument_parser">
+</section>
+<section id="module-utils.argument_parser">
 <span id="utils-argument-parser-module"></span><h2>utils.argument_parser module<a class="headerlink" href="#module-utils.argument_parser" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="utils.argument_parser.get_args">
-<code class="sig-prename descclassname"><span class="pre">utils.argument_parser.</span></code><code class="sig-name descname"><span class="pre">get_args</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.argument_parser.get_args" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.argument_parser.get_args">
+<span class="sig-prename descclassname"><span class="pre">utils.argument_parser.</span></span><span class="sig-name descname"><span class="pre">get_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.argument_parser.get_args" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="utils.argument_parser.receive_arguments">
-<code class="sig-prename descclassname"><span class="pre">utils.argument_parser.</span></code><code class="sig-name descname"><span class="pre">receive_arguments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.argument_parser.receive_arguments" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.argument_parser.receive_arguments">
+<span class="sig-prename descclassname"><span class="pre">utils.argument_parser.</span></span><span class="sig-name descname"><span class="pre">receive_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.argument_parser.receive_arguments" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-utils">
+</section>
+<section id="module-utils">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-utils" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="utils.receives_config">
-<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">receives_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">required_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.receives_config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="utils.receives_config">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">receives_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">required_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.receives_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
       </div>
@@ -173,7 +174,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, jeff.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
     </div>
   </body>
 </html>
